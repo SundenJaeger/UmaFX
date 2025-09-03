@@ -1,0 +1,13 @@
+{
+  "sheets": [
+    {
+      "name": "dance",
+      "file": "teio_outfit_01_dance_01.png",
+      "columns": 5,
+      "rows": 3,
+      "totalFrames": 11,
+      "frameWidth": 300,
+      "frameHeight": 300
+    }
+  ]
+}
