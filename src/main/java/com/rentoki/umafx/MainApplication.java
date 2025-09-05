@@ -27,6 +27,7 @@ public class MainApplication extends Application {
         preferenceService.initializeProperties();
 
         scene.setFill(Color.TRANSPARENT);
+        scene.getStylesheets().add(MainApplication.class.getResource("css/base.css").toExternalForm());
 
         stage.setTitle("UmaFX");
         stage.initStyle(StageStyle.TRANSPARENT);
