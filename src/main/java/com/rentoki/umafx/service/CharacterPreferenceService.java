@@ -11,10 +11,24 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+enum Key {
+    CHARACTER("Character"),
+    VERSION("Version");
+
+    private final String key;
+
+    Key(String key) {
+        this.key = key;
+    }
+
+    public String getKey() {
+        return key;
+    }
+}
+
 public class CharacterPreferenceService {
-    private static final String CHARACTER_KEY = "Character";
-    private static final String VERSION_KEY = "Version";
-    private static final Path PROPERTIES_DIR = Path.of(System.getProperty("user.dir"), "config.properties");
+    private static final String PROPERTIES_DIR = System.getProperty("user.home") + "/Documents/UmaFX";
+    private static final Path PROPERTIES_PATH = Path.of(PROPERTIES_DIR, "config.properties");
 
     private final PropertiesRepository propertiesRepository;
     private final StringProperty character = new SimpleStringProperty();
@@ -25,23 +39,27 @@ public class CharacterPreferenceService {
     }
 
     public void initializeProperties() {
-        if (!Files.exists(PROPERTIES_DIR)) {
-            createProperties();
-            return;
-        }
+        try {
+            Files.createDirectory(Path.of(PROPERTIES_DIR));
 
-        try (FileInputStream fis = new FileInputStream(PROPERTIES_DIR.toFile())) {
-            propertiesRepository.load(fis);
-
-            String versionStr = propertiesRepository.getProperty(VERSION_KEY);
-            if (versionStr == null || !isVersionCompatible(versionStr)) {
-                System.err.println("Properties version mismatch or missing. Recreating properties file");
+            if (!Files.exists(PROPERTIES_PATH)) {
                 createProperties();
                 return;
             }
 
-            character.set(propertiesRepository.getProperty(CHARACTER_KEY));
+            try (FileInputStream fis = new FileInputStream(PROPERTIES_PATH.toFile())) {
+                propertiesRepository.load(fis);
 
+                String versionStr = propertiesRepository.getProperty(Key.VERSION.getKey());
+                if (versionStr == null || !isVersionCompatible(versionStr)) {
+                    System.err.println("Properties version mismatch or missing. Recreating properties file");
+                    createProperties();
+                    return;
+                }
+
+                character.set(propertiesRepository.getProperty(Key.CHARACTER.getKey()));
+
+            }
         } catch (IOException | PropertiesRepositoryException e) {
             System.err.println(e.getMessage());
             createProperties();
@@ -54,10 +72,10 @@ public class CharacterPreferenceService {
 
     private void createProperties() {
         try {
-            propertiesRepository.setProperty(VERSION_KEY, String.valueOf(version));
-            propertiesRepository.setProperty(CHARACTER_KEY, "teio");
+            propertiesRepository.setProperty(Key.VERSION.getKey(), String.valueOf(version));
+            propertiesRepository.setProperty(Key.CHARACTER.getKey(), "teio");
 
-            try (FileOutputStream fos = new FileOutputStream(PROPERTIES_DIR.toFile())) {
+            try (FileOutputStream fos = new FileOutputStream(PROPERTIES_PATH.toFile())) {
                 propertiesRepository.store(fos);
             }
 
