@@ -11,22 +11,22 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-enum Key {
-    CHARACTER("Character"),
-    VERSION("Version");
-
-    private final String key;
-
-    Key(String key) {
-        this.key = key;
-    }
-
-    public String getKey() {
-        return key;
-    }
-}
-
 public class CharacterPreferenceService {
+    enum Key {
+        CHARACTER("Character"),
+        VERSION("Version");
+
+        private final String key;
+
+        Key(String key) {
+            this.key = key;
+        }
+
+        public String getKey() {
+            return key;
+        }
+    }
+
     private static final String PROPERTIES_DIR = System.getProperty("user.home") + "/Documents/UmaFX";
     private static final Path PROPERTIES_PATH = Path.of(PROPERTIES_DIR, "config.properties");
 
@@ -40,7 +40,7 @@ public class CharacterPreferenceService {
 
     public void initializeProperties() {
         try {
-            Files.createDirectory(Path.of(PROPERTIES_DIR));
+            Files.createDirectories(Path.of(PROPERTIES_DIR));
 
             if (!Files.exists(PROPERTIES_PATH)) {
                 createProperties();
