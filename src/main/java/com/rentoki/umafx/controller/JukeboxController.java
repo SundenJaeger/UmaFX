@@ -15,12 +15,13 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 
 public class JukeboxController {
-    private static final String SPRITE_SHEET_FOLDER = "/com/rentoki/umafx/spritesheets/";
+    private static final String SPRITE_SHEET_DIR = System.getProperty("user.home") + "/Documents/UmaFX/spritesheets";
     private static final int FRAMES_PER_SECOND = 30;
 
     private final StringProperty characterName = new SimpleStringProperty();
@@ -64,19 +65,19 @@ public class JukeboxController {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            Path configPath = Path.of(Objects.requireNonNull(JukeboxController.class.getResource(SPRITE_SHEET_FOLDER + folder + "/config.json")).toURI());
+            Files.createDirectories(Path.of(SPRITE_SHEET_DIR));
+            Path configPath = Path.of(SPRITE_SHEET_DIR, folder, "config.json");
 
             SpriteSheetConfig config = mapper.readValue(configPath.toFile(), SpriteSheetConfig.class);
 
             for (SpriteSheet sheet : config.sheets) {
-                Path imagePath = Path.of(Objects.requireNonNull(getClass()
-                        .getResource(SPRITE_SHEET_FOLDER + folder + "/" + sheet.file)).toURI());
+                Path imagePath = Path.of(SPRITE_SHEET_DIR, folder, sheet.file);
                 sheet.image = new Image(imagePath.toFile().toURI().toString());
             }
 
             return config.sheets;
 
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
