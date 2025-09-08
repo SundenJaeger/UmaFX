@@ -19,7 +19,7 @@
                   <Font size="26.0" />
                </font>
             </Label>
-            <ImageView fx:id="spriteImageView" cache="true" cacheHint="SPEED" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="spriteImageView" cache="true" cacheHint="SPEED" fitHeight="150.0" fitWidth="200.0" onMouseDragged="#spriteDragged" onMousePressed="#spritePressed" pickOnBounds="true" preserveRatio="true" />
          </children>
       </HBox>
    </children>

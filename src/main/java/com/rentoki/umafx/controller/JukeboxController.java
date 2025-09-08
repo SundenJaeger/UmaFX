@@ -8,7 +8,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -20,6 +23,9 @@ public class JukeboxController {
     private final MediaPlayerManager mediaPlayerManager = new MediaPlayerManager();
 
     private SongQueueDialog songQueueDialog;
+
+    private double xOffset;
+    private double yOffset;
 
     @FXML
     private ImageView spriteImageView;
@@ -44,6 +50,22 @@ public class JukeboxController {
             List<Path> paths = songs.stream().map(Song::path).toList();
             mediaPlayerManager.play(paths);
         });
+    }
+
+    @FXML
+    private void spritePressed(MouseEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        xOffset = event.getScreenX() - stage.getX();
+        yOffset = event.getScreenY() - stage.getY();
+    }
+
+    @FXML
+    private void spriteDragged(MouseEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        stage.setX(event.getScreenX() - xOffset);
+        stage.setY(event.getScreenY() - yOffset);
     }
 
     public StringProperty characterNameProperty() {
