@@ -1,7 +1,8 @@
 package com.rentoki.umafx.enums;
 
 public enum View {
-    JUKEBOX("jukebox-view.fxml");
+    JUKEBOX("jukebox-view.fxml"),
+    SONG_QUEUE("song-queue-view.fxml");
 
     private final String fxmlPath;
 
