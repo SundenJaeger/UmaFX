@@ -4,6 +4,7 @@ module com.rentoki.umafx {
     requires java.prefs;
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.databind;
+    requires javafx.media;
 
 
     opens com.rentoki.umafx to javafx.fxml;
