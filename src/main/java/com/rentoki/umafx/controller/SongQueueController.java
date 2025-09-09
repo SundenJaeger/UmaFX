@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -27,6 +28,7 @@ public class SongQueueController {
     @FXML
     private void initialize() {
         songQueueListView.setItems(songs);
+        songQueueListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     @FXML
@@ -60,6 +62,17 @@ public class SongQueueController {
         if (files != null) {
             files.forEach(file -> songs.add(new Song(file.toPath())));
         }
+    }
+
+    @FXML
+    private void removeSong() {
+        ObservableList<Song> selectedSongs = songQueueListView.getSelectionModel().getSelectedItems();
+        songs.removeAll(selectedSongs);
+    }
+
+    @FXML
+    private void removeAllSong() {
+        songs.clear();
     }
 
     public ObservableList<Song> getSongs() {
