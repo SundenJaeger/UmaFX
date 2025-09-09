@@ -4,11 +4,16 @@ import com.rentoki.umafx.dialog.SongQueueDialog;
 import com.rentoki.umafx.manager.AnimationManager;
 import com.rentoki.umafx.manager.MediaPlayerManager;
 import com.rentoki.umafx.model.Song;
+import com.rentoki.umafx.util.ContextMenuBuilder;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -30,6 +35,8 @@ public class JukeboxController {
 
     @FXML
     private ImageView spriteImageView;
+    @FXML
+    private ImageView jukeboxImageView;
 
     @FXML
     private void initialize() {
@@ -38,6 +45,8 @@ public class JukeboxController {
                 animationManager.loadAndStartAnimation(newValue, spriteImageView);
             }
         });
+
+        setupJukeboxContextMenu();
     }
 
     @FXML
@@ -78,5 +87,28 @@ public class JukeboxController {
 
     public StringProperty characterNameProperty() {
         return characterName;
+    }
+
+    private void setupJukeboxContextMenu() {
+        final MenuItem playPauseItem = new MenuItem();
+
+        playPauseItem.textProperty().bind(Bindings.when(mediaPlayerManager.playingProperty()).then("Pause").otherwise("Play"));
+
+        playPauseItem.setOnAction(event -> {
+            if (mediaPlayerManager.isPlaying()) {
+                mediaPlayerManager.pause();
+            } else {
+                mediaPlayerManager.play();
+            }
+        });
+
+        final ContextMenu jukeboxContextMenu = new ContextMenuBuilder()
+                .addMenuItem(playPauseItem)
+                .addMenuItem("Stop", event -> mediaPlayerManager.stop())
+                .addSeparator()
+                .addMenuItem("Exit",event -> Platform.exit())
+                .build();
+
+        jukeboxImageView.setOnContextMenuRequested(event -> jukeboxContextMenu.show(jukeboxImageView, event.getScreenX(), event.getScreenY()));
     }
 }
