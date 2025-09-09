@@ -24,6 +24,13 @@ public class ContextMenuBuilder implements ActionMenuBuilder<ContextMenuBuilder>
     }
 
     @Override
+    public ContextMenuBuilder addMenuItem(MenuItem menuItem) {
+        menuItems.add(menuItem);
+
+        return this;
+    }
+
+    @Override
     public ContextMenuBuilder addSeparator() {
         menuItems.add(new SeparatorMenuItem());
 
