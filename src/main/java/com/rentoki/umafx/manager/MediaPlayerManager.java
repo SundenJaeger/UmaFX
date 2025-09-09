@@ -1,6 +1,8 @@
 package com.rentoki.umafx.manager;
 
 import com.rentoki.umafx.model.Song;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.media.Media;
@@ -14,9 +16,13 @@ public class MediaPlayerManager {
     private Media media;
     private MediaPlayer mediaPlayer;
     private int musicIndex;
+    private final BooleanProperty playing = new SimpleBooleanProperty(false);
 
-    public void play(List<Path> paths) {
-        songs.setAll(paths.stream().map(Song::new).toList());
+    public void play() {
+        if (!playing.get() && mediaPlayer != null) {
+            mediaPlayer.play();
+            return;
+        }
 
         if (!songs.isEmpty()) {
             musicIndex = 0;
@@ -33,20 +39,33 @@ public class MediaPlayerManager {
     public void stop() {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
-            mediaPlayer.dispose();
+//            mediaPlayer.dispose();
         }
     }
 
-    public void resume() {
-        if (mediaPlayer != null) {
-            mediaPlayer.play();
-        }
+    public void addSong(List<Path> paths) {
+        songs.setAll(paths.stream().map(Song::new).toList());
+    }
+
+    public ObservableList<Song> getSongs() {
+        return songs;
+    }
+
+    public BooleanProperty playingProperty() {
+        return playing;
+    }
+
+    public boolean isPlaying() {
+        return playing.get();
     }
 
     private void playSong(int index) {
         media = new Media(songs.get(index).path().toUri().toString());
         mediaPlayer = new MediaPlayer(media);
 
+        mediaPlayer.setOnPaused(() -> playing.set(false));
+        mediaPlayer.setOnPlaying(() -> playing.set(true));
+        mediaPlayer.setOnStopped(() -> playing.set(false));
         mediaPlayer.setOnEndOfMedia(() -> {
             musicIndex = (musicIndex + 1) % songs.size();
             playSong(musicIndex);
