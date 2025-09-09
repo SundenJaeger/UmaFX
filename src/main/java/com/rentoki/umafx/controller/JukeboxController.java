@@ -51,7 +51,7 @@ public class JukeboxController {
 
             result.ifPresent(songs -> {
                 List<Path> paths = songs.stream().map(Song::path).toList();
-                mediaPlayerManager.play(paths);
+                mediaPlayerManager.addSong(paths);
             });
         }
     }
