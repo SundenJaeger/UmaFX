@@ -7,7 +7,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rentoki.umafx.controller.JukeboxController">
    <children>
-      <ImageView fitHeight="117.0" fitWidth="94.0" layoutX="14.0" layoutY="122.0" onMouseClicked="#playJukebox" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="jukeboxImageView" fitHeight="117.0" fitWidth="94.0" layoutX="14.0" layoutY="122.0" onMouseClicked="#playJukebox" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../media/temp.png" />
          </image>
