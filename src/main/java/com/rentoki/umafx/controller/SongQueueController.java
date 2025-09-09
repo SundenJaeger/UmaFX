@@ -1,11 +1,14 @@
 package com.rentoki.umafx.controller;
 
 import com.rentoki.umafx.model.Song;
+import com.rentoki.umafx.util.ContextMenuBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.input.KeyCode;
@@ -31,6 +34,7 @@ public class SongQueueController {
         songQueueListView.setItems(songs);
         songQueueListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         setupDeleteKeyHandler();
+        songQueueListView.setCellFactory(param -> new SongQueueListCell());
     }
 
     @FXML
@@ -87,5 +91,23 @@ public class SongQueueController {
                 removeSong();
             }
         });
+    }
+
+    private class SongQueueListCell extends ListCell<Song> {
+        private final ContextMenu contextMenu = new ContextMenuBuilder()
+                .addMenuItem("Remove", event -> removeSong())
+                .build();
+
+        @Override
+        protected void updateItem(Song item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if (empty || item == null) {
+                setText(null);
+            } else {
+                setText(item.toString());
+                setContextMenu(contextMenu);
+            }
+        }
     }
 }
