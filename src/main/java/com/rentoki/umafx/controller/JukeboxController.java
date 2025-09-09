@@ -41,16 +41,19 @@ public class JukeboxController {
     }
 
     @FXML
-    private void playJukebox() {
-        if (songQueueDialog == null) {
-            songQueueDialog = new SongQueueDialog();
-        }
-        Optional<ObservableList<Song>> result = songQueueDialog.showAndWait();
+    private void playJukebox(MouseEvent event) {
+        if (event.getButton() == MouseButton.PRIMARY) {
+            if (songQueueDialog == null) {
+                songQueueDialog = new SongQueueDialog();
+            }
 
-        result.ifPresent(songs -> {
-            List<Path> paths = songs.stream().map(Song::path).toList();
-            mediaPlayerManager.play(paths);
-        });
+            Optional<ObservableList<Song>> result = songQueueDialog.showAndWait();
+
+            result.ifPresent(songs -> {
+                List<Path> paths = songs.stream().map(Song::path).toList();
+                mediaPlayerManager.play(paths);
+            });
+        }
     }
 
     @FXML
