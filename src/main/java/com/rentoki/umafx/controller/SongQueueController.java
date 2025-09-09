@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.input.KeyCode;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -29,6 +30,7 @@ public class SongQueueController {
     private void initialize() {
         songQueueListView.setItems(songs);
         songQueueListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        setupDeleteKeyHandler();
     }
 
     @FXML
@@ -77,5 +79,13 @@ public class SongQueueController {
 
     public ObservableList<Song> getSongs() {
         return songs;
+    }
+
+    private void setupDeleteKeyHandler() {
+        songQueueListView.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.DELETE) {
+                removeSong();
+            }
+        });
     }
 }
