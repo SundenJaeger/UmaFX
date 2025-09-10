@@ -52,16 +52,7 @@ public class JukeboxController {
     @FXML
     private void playJukebox(MouseEvent event) {
         if (event.getButton() == MouseButton.PRIMARY) {
-            if (songQueueDialog == null) {
-                songQueueDialog = new SongQueueDialog();
-            }
-
-            Optional<ObservableList<Song>> result = songQueueDialog.showAndWait();
-
-            result.ifPresent(songs -> {
-                List<Path> paths = songs.stream().map(Song::path).toList();
-                mediaPlayerManager.addSong(paths);
-            });
+            openSongQueue();
         }
     }
 
@@ -110,5 +101,18 @@ public class JukeboxController {
                 .build();
 
         jukeboxImageView.setOnContextMenuRequested(event -> jukeboxContextMenu.show(jukeboxImageView, event.getScreenX(), event.getScreenY()));
+    }
+
+    private void openSongQueue() {
+        if (songQueueDialog == null) {
+            songQueueDialog = new SongQueueDialog();
+        }
+
+        Optional<ObservableList<Song>> result = songQueueDialog.showAndWait();
+
+        result.ifPresent(songs -> {
+            List<Path> paths = songs.stream().map(Song::path).toList();
+            mediaPlayerManager.addSong(paths);
+        });
     }
 }
