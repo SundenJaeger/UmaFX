@@ -1,8 +1,6 @@
 package com.rentoki.umafx.util;
 
 import com.rentoki.umafx.interfaces.ActionMenuBuilder;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -15,9 +13,9 @@ public class ContextMenuBuilder implements ActionMenuBuilder<ContextMenuBuilder>
     private final List<MenuItem> menuItems = new ArrayList<>();
 
     @Override
-    public ContextMenuBuilder addMenuItem(String text, Node graphic, EventHandler<ActionEvent> action) {
+    public ContextMenuBuilder addMenuItem(String text, Node graphic, Runnable action) {
         MenuItem item = new MenuItem(text, graphic);
-        item.setOnAction(action);
+        item.setOnAction(event -> action.run());
         menuItems.add(item);
 
         return this;
