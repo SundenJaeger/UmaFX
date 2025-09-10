@@ -94,10 +94,13 @@ public class JukeboxController {
         });
 
         final ContextMenu jukeboxContextMenu = new ContextMenuBuilder()
-                .addMenuItem(playPauseItem)
-                .addMenuItem("Stop", event -> mediaPlayerManager.stop())
+                .addMenuItem("Open Song Queue", this::openSongQueue)
                 .addSeparator()
-                .addMenuItem("Exit",event -> Platform.exit())
+                .addMenuItem(playPauseItem)
+                .addMenuItem("Stop", mediaPlayerManager::stop)
+                .addMenuItem("Skip", mediaPlayerManager::skip)
+                .addSeparator()
+                .addMenuItem("Exit", Platform::exit)
                 .build();
 
         jukeboxImageView.setOnContextMenuRequested(event -> jukeboxContextMenu.show(jukeboxImageView, event.getScreenX(), event.getScreenY()));
