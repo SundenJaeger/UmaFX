@@ -36,6 +36,13 @@ public class MediaPlayerManager {
         }
     }
 
+    public void skip() {
+        if (mediaPlayer != null) {
+            musicIndex = (musicIndex + 1) % songs.size();
+            playSong(musicIndex);
+        }
+    }
+
     public void stop() {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
@@ -60,6 +67,11 @@ public class MediaPlayerManager {
     }
 
     private void playSong(int index) {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.dispose();
+        }
+
         media = new Media(songs.get(index).path().toUri().toString());
         mediaPlayer = new MediaPlayer(media);
 
