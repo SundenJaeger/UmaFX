@@ -95,7 +95,7 @@ public class SongQueueController {
 
     private class SongQueueListCell extends ListCell<Song> {
         private final ContextMenu contextMenu = new ContextMenuBuilder()
-                .addMenuItem("Remove", event -> removeSong())
+                .addMenuItem("Remove", SongQueueController.this::removeSong)
                 .build();
 
         @Override
