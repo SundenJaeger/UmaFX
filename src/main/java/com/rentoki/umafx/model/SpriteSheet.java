@@ -11,6 +11,7 @@ public class SpriteSheet {
     public int totalFrames;
     public int frameWidth;
     public int frameHeight;
+    public boolean loop;
 
     @JsonIgnore
     public Image image;
