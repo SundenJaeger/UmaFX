@@ -42,7 +42,15 @@ public class JukeboxController {
     private void initialize() {
         characterName.addListener((observable, oldValue, newValue) -> {
             if (newValue != null && !newValue.trim().isEmpty()) {
-                animationManager.loadAndStartAnimation(newValue, spriteImageView);
+                animationManager.loadAnimation(newValue, spriteImageView);
+            }
+        });
+
+        mediaPlayerManager.playingProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                animationManager.playAnimation("ready", spriteImageView, () -> animationManager.playAnimation("dance", spriteImageView, null));
+            } else {
+                animationManager.playAnimation("idle", spriteImageView, null);
             }
         });
 
