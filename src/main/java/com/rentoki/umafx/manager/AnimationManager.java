@@ -9,7 +9,9 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AnimationManager {
     private static final int FRAMES_PER_SECOND = 30;
@@ -17,23 +19,40 @@ public class AnimationManager {
     private Timeline animationTimeline;
     private int currentFrame;
     private SpriteSheet currentSheet;
+    private final Map<String, SpriteSheet> spriteSheetMap = new HashMap<>();
+    private Runnable onAnimationComplete;
 
     public AnimationManager() {
         this.spriteLoader = new SpriteLoader();
     }
 
-    public void loadAndStartAnimation(String characterFolder, ImageView imageView) {
+    public void loadAnimation(String characterFolder, ImageView imageView) {
+        spriteSheetMap.clear();
         try {
             List<SpriteSheet> sheets = spriteLoader.loadSpriteSheets(characterFolder);
-            currentSheet = sheets.getFirst();
-            currentFrame = 0;
 
-            imageView.setImage(currentSheet.image);
-            startAnimation(imageView);
+            for (SpriteSheet sheet : sheets) {
+                spriteSheetMap.put(sheet.name, sheet);
+            }
 
+            playAnimation("idle", imageView, null);
         } catch (IOException e) {
-            System.err.println("Failed to load animation: " + e.getMessage());
+            throw new RuntimeException(e);
         }
+    }
+
+    public void playAnimation(String name, ImageView imageView, Runnable onAnimationComplete) {
+        stopAnimation();
+        this.onAnimationComplete = onAnimationComplete;
+        currentSheet = spriteSheetMap.get(name);
+
+        if (currentSheet == null) {
+            return;
+        }
+
+        currentFrame = 0;
+        imageView.setImage(currentSheet.image);
+        startAnimation(imageView, currentSheet.loop);
     }
 
     public void stopAnimation() {
@@ -42,7 +61,7 @@ public class AnimationManager {
         }
     }
 
-    private void startAnimation(ImageView imageView) {
+    private void startAnimation(ImageView imageView, boolean loop) {
         if (animationTimeline != null) {
             animationTimeline.stop();
         }
@@ -53,7 +72,17 @@ public class AnimationManager {
             updateFrame(imageView);
         }));
 
-        animationTimeline.setCycleCount(Timeline.INDEFINITE);
+        if (loop) {
+            animationTimeline.setCycleCount(Timeline.INDEFINITE);
+        } else {
+            animationTimeline.setCycleCount(currentSheet.totalFrames);
+            animationTimeline.setOnFinished(event -> {
+                if (onAnimationComplete != null) {
+                    onAnimationComplete.run();
+                }
+            });
+        }
+
         animationTimeline.play();
     }
 
