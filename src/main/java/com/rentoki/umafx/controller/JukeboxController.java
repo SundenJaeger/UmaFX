@@ -119,6 +119,9 @@ public class JukeboxController {
             songQueueDialog = new SongQueueDialog();
         }
 
+        songQueueDialog.removeAllSong();
+        songQueueDialog.setSongs(mediaPlayerManager.getSongs());
+
         Optional<ObservableList<Song>> result = songQueueDialog.showAndWait();
 
         result.ifPresent(songs -> {

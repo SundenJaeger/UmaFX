@@ -45,6 +45,14 @@ public class SongQueueDialog extends Dialog<ObservableList<Song>> {
         });
     }
 
+    public void removeAllSong() {
+        songQueueController.removeAllSong();
+    }
+
+    public void setSongs(ObservableList<Song> songs) {
+        songQueueController.setSongs(songs);
+    }
+
     private Parent loadSongQueueView() {
         if (songQueueNode == null) {
             try {

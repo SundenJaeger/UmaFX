@@ -76,8 +76,11 @@ public class SongQueueController {
         songs.removeAll(selectedSongs);
     }
 
-    @FXML
-    private void removeAllSong() {
+    public void setSongs(ObservableList<Song> songs) {
+        this.songs.setAll(songs);
+    }
+
+    public void removeAllSong() {
         songs.clear();
     }
 
