@@ -1,13 +1,34 @@
 {
   "sheets": [
     {
+      "name": "idle",
+      "file": "teio_outfit_01_idle.png",
+      "columns": 6,
+      "rows": 14,
+      "totalFrames": 80,
+      "frameWidth": 375,
+      "frameHeight": 375,
+      "loop": true
+    },
+    {
+      "name": "ready",
+      "file": "teio_outfit_01_ready.png",
+      "columns": 6,
+      "rows": 5,
+      "totalFrames": 29,
+      "frameWidth": 375,
+      "frameHeight": 375,
+      "loop": false
+    },
+    {
       "name": "dance",
       "file": "teio_outfit_01_dance_01.png",
-      "columns": 5,
-      "rows": 3,
-      "totalFrames": 11,
-      "frameWidth": 300,
-      "frameHeight": 300
+      "columns": 6,
+      "rows": 2,
+      "totalFrames": 12,
+      "frameWidth": 375,
+      "frameHeight": 375,
+      "loop": true
     }
   ]
 }
