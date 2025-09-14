@@ -164,7 +164,11 @@ public class JukeboxController {
                 .addMenuItem("Stop", mediaPlayerManager::stop)
                 .addMenuItem("Skip", mediaPlayerManager::skip)
                 .addSeparator()
-                .addMenuItem("Exit", Platform::exit)
+                .addMenuItem("Exit", () -> {
+                    Platform.setImplicitExit(true);
+                    Platform.exit();
+                    System.exit(0);
+                })
                 .build();
 
         jukeboxImageView.setOnContextMenuRequested(event -> jukeboxContextMenu.show(jukeboxImageView, event.getScreenX(), event.getScreenY()));
