@@ -1,9 +1,12 @@
 package com.rentoki.umafx.controller;
 
 import com.rentoki.umafx.dialog.SongQueueDialog;
+import com.rentoki.umafx.interfaces.PreferencesRepository;
 import com.rentoki.umafx.manager.AnimationManager;
 import com.rentoki.umafx.manager.MediaPlayerManager;
 import com.rentoki.umafx.model.Song;
+import com.rentoki.umafx.service.CharacterPreferenceService;
+import com.rentoki.umafx.service.WindowPreferencesService;
 import com.rentoki.umafx.util.ContextMenuBuilder;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -24,6 +27,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class JukeboxController {
+    private final WindowPreferencesService windowPreferencesService;
+    private final CharacterPreferenceService characterPreferenceService;
+
     private final AnimationManager animationManager = new AnimationManager();
     private final StringProperty characterName = new SimpleStringProperty();
     private final MediaPlayerManager mediaPlayerManager = new MediaPlayerManager();
@@ -32,14 +38,24 @@ public class JukeboxController {
 
     private double xOffset;
     private double yOffset;
+    private double posX;
+    private double posY;
+    private double lastPosX = -1;
+    private double lastPosY = -1;
 
     @FXML
     private ImageView spriteImageView;
     @FXML
     private ImageView jukeboxImageView;
 
+    public JukeboxController(WindowPreferencesService windowPreferencesService, CharacterPreferenceService characterPreferenceService) {
+        this.windowPreferencesService = windowPreferencesService;
+        this.characterPreferenceService = characterPreferenceService;
+    }
+
     @FXML
     private void initialize() {
+        characterNameProperty().bind(characterPreferenceService.characterProperty());
         characterName.addListener((observable, oldValue, newValue) -> {
             if (newValue != null && !newValue.trim().isEmpty()) {
                 animationManager.loadAnimation(newValue, spriteImageView);
@@ -79,8 +95,26 @@ public class JukeboxController {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         if (event.getButton() == MouseButton.PRIMARY) {
-            stage.setX(event.getScreenX() - xOffset);
-            stage.setY(event.getScreenY() - yOffset);
+            posX = event.getScreenX() - xOffset;
+            posY = event.getScreenY() - yOffset;
+
+            stage.setX(posX);
+            stage.setY(posY);
+        }
+    }
+
+    @FXML
+    private void spriteReleased(MouseEvent event) {
+        if (event.getButton() == MouseButton.PRIMARY) {
+            if (posX != lastPosX || posY != lastPosY) {
+                System.out.println(posX);
+                System.out.println(posY);
+
+                lastPosX = posX;
+                lastPosY = posY;
+
+                windowPreferencesService.savePos(lastPosX, lastPosY);
+            }
         }
     }
 

@@ -11,5 +11,7 @@ module com.rentoki.umafx {
     exports com.rentoki.umafx;
     exports com.rentoki.umafx.controller;
     exports com.rentoki.umafx.model;
+    exports com.rentoki.umafx.service;
+    exports com.rentoki.umafx.interfaces;
     opens com.rentoki.umafx.controller to javafx.fxml;
 }
