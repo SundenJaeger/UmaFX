@@ -26,10 +26,10 @@ public class WindowPreferencesService {
     }
 
     public double getPosX() {
-        return preferencesRepository.getDouble(WINDOW_POS_X, Double.NaN);
+        return preferencesRepository.getDouble(WINDOW_POS_X, 0);
     }
 
     public double getPosY() {
-        return preferencesRepository.getDouble(WINDOW_POS_Y, Double.NaN);
+        return preferencesRepository.getDouble(WINDOW_POS_Y, 0);
     }
 }
