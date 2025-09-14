@@ -4,6 +4,7 @@ import com.rentoki.umafx.controller.JukeboxController;
 import com.rentoki.umafx.enums.View;
 import com.rentoki.umafx.interfaces.PreferencesRepository;
 import com.rentoki.umafx.interfaces.PropertiesRepository;
+import com.rentoki.umafx.manager.MediaPlayerManager;
 import com.rentoki.umafx.repository.PreferencesRepositoryImpl;
 import com.rentoki.umafx.repository.PropertiesRepositoryImpl;
 import com.rentoki.umafx.service.CharacterPreferenceService;
@@ -21,10 +22,12 @@ import java.lang.reflect.InvocationTargetException;
 public class MainApplication extends Application {
     private final CharacterPreferenceService characterPreferenceService;
     private final WindowPreferencesService windowPreferencesService;
+    private final MediaPlayerManager mediaPlayerManager = new MediaPlayerManager();
 
     public MainApplication() {
         PropertiesRepository propertiesRepository = new PropertiesRepositoryImpl();
         this.characterPreferenceService = new CharacterPreferenceService(propertiesRepository);
+
         PreferencesRepository preferencesRepository = new PreferencesRepositoryImpl(MainApplication.class);
         this.windowPreferencesService = new WindowPreferencesService(preferencesRepository);
     }
@@ -34,7 +37,7 @@ public class MainApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(View.JUKEBOX.getFxmlPath()));
         fxmlLoader.setControllerFactory(param -> {
             if (param == JukeboxController.class) {
-                return new JukeboxController(windowPreferencesService, characterPreferenceService);
+                return new JukeboxController(windowPreferencesService, characterPreferenceService, mediaPlayerManager);
             } else {
                 try {
                     return param.getDeclaredConstructor().newInstance();

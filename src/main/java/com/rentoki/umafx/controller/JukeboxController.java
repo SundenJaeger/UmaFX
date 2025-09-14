@@ -1,7 +1,6 @@
 package com.rentoki.umafx.controller;
 
 import com.rentoki.umafx.dialog.SongQueueDialog;
-import com.rentoki.umafx.interfaces.PreferencesRepository;
 import com.rentoki.umafx.manager.AnimationManager;
 import com.rentoki.umafx.manager.MediaPlayerManager;
 import com.rentoki.umafx.model.Song;
@@ -29,10 +28,10 @@ import java.util.Optional;
 public class JukeboxController {
     private final WindowPreferencesService windowPreferencesService;
     private final CharacterPreferenceService characterPreferenceService;
+    private final MediaPlayerManager mediaPlayerManager;
 
     private final AnimationManager animationManager = new AnimationManager();
     private final StringProperty characterName = new SimpleStringProperty();
-    private final MediaPlayerManager mediaPlayerManager = new MediaPlayerManager();
 
     private SongQueueDialog songQueueDialog;
 
@@ -48,9 +47,10 @@ public class JukeboxController {
     @FXML
     private ImageView jukeboxImageView;
 
-    public JukeboxController(WindowPreferencesService windowPreferencesService, CharacterPreferenceService characterPreferenceService) {
+    public JukeboxController(WindowPreferencesService windowPreferencesService, CharacterPreferenceService characterPreferenceService, MediaPlayerManager mediaPlayerManager) {
         this.windowPreferencesService = windowPreferencesService;
         this.characterPreferenceService = characterPreferenceService;
+        this.mediaPlayerManager = mediaPlayerManager;
     }
 
     @FXML
