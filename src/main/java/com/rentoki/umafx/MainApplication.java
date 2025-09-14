@@ -1,5 +1,6 @@
 package com.rentoki.umafx;
 
+import com.dustinredmond.fxtrayicon.FXTrayIcon;
 import com.rentoki.umafx.controller.JukeboxController;
 import com.rentoki.umafx.enums.View;
 import com.rentoki.umafx.interfaces.PreferencesRepository;
@@ -10,8 +11,12 @@ import com.rentoki.umafx.repository.PropertiesRepositoryImpl;
 import com.rentoki.umafx.service.CharacterPreferenceService;
 import com.rentoki.umafx.service.WindowPreferencesService;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -24,6 +29,9 @@ public class MainApplication extends Application {
     private final WindowPreferencesService windowPreferencesService;
     private final MediaPlayerManager mediaPlayerManager = new MediaPlayerManager();
 
+    private Stage primaryStage;
+    private JukeboxController jukeboxController;
+
     public MainApplication() {
         PropertiesRepository propertiesRepository = new PropertiesRepositoryImpl();
         this.characterPreferenceService = new CharacterPreferenceService(propertiesRepository);
@@ -34,6 +42,7 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        this.primaryStage = stage;
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(View.JUKEBOX.getFxmlPath()));
         fxmlLoader.setControllerFactory(param -> {
             if (param == JukeboxController.class) {
@@ -49,7 +58,10 @@ public class MainApplication extends Application {
         });
 
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        jukeboxController = fxmlLoader.getController();
+
         characterPreferenceService.initializeProperties();
+
         scene.setFill(Color.TRANSPARENT);
         scene.getStylesheets().add(MainApplication.class.getResource("css/base.css").toExternalForm());
 
@@ -60,5 +72,22 @@ public class MainApplication extends Application {
         stage.setX(windowPreferencesService.getPosX());
         stage.setY(windowPreferencesService.getPosY());
         stage.setAlwaysOnTop(true);
+
+        setTrayIcon();
+    }
+
+    private void setTrayIcon() {
+        final MenuItem playPauseItem = jukeboxController.playPauseItem();
+
+        FXTrayIcon fxTrayIcon = new FXTrayIcon.Builder(primaryStage)
+                .menuItem("Open Song Queue", event -> jukeboxController.openSongQueue())
+                .separator()
+                .menuItem(playPauseItem)
+                .menuItem("Stop", event -> mediaPlayerManager.stop())
+                .menuItem("Skip", event -> mediaPlayerManager.skip())
+                .separator()
+                .addExitMenuItem("Exit UmaFX")
+                .show()
+                .build();
     }
 }

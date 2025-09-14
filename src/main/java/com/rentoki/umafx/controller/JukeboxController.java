@@ -122,12 +122,12 @@ public class JukeboxController {
         return characterName;
     }
 
-    private void setupJukeboxContextMenu() {
-        final MenuItem playPauseItem = new MenuItem();
+    public MenuItem playPauseItem() {
+        MenuItem menuItem = new MenuItem();
 
-        playPauseItem.textProperty().bind(Bindings.when(mediaPlayerManager.playingProperty()).then("Pause").otherwise("Play"));
+        menuItem.textProperty().bind(Bindings.when(mediaPlayerManager.playingProperty()).then("Pause").otherwise("Play"));
 
-        playPauseItem.setOnAction(event -> {
+        menuItem.setOnAction(event -> {
             if (mediaPlayerManager.isPlaying()) {
                 mediaPlayerManager.pause();
             } else {
@@ -135,20 +135,10 @@ public class JukeboxController {
             }
         });
 
-        final ContextMenu jukeboxContextMenu = new ContextMenuBuilder()
-                .addMenuItem("Open Song Queue", this::openSongQueue)
-                .addSeparator()
-                .addMenuItem(playPauseItem)
-                .addMenuItem("Stop", mediaPlayerManager::stop)
-                .addMenuItem("Skip", mediaPlayerManager::skip)
-                .addSeparator()
-                .addMenuItem("Exit", Platform::exit)
-                .build();
-
-        jukeboxImageView.setOnContextMenuRequested(event -> jukeboxContextMenu.show(jukeboxImageView, event.getScreenX(), event.getScreenY()));
+        return menuItem;
     }
 
-    private void openSongQueue() {
+    public void openSongQueue() {
         if (songQueueDialog == null) {
             songQueueDialog = new SongQueueDialog();
         }
@@ -162,5 +152,21 @@ public class JukeboxController {
             List<Path> paths = songs.stream().map(Song::path).toList();
             mediaPlayerManager.addSong(paths);
         });
+    }
+
+    private void setupJukeboxContextMenu() {
+        final MenuItem playPauseItem = playPauseItem();
+
+        final ContextMenu jukeboxContextMenu = new ContextMenuBuilder()
+                .addMenuItem("Open Song Queue", this::openSongQueue)
+                .addSeparator()
+                .addMenuItem(playPauseItem)
+                .addMenuItem("Stop", mediaPlayerManager::stop)
+                .addMenuItem("Skip", mediaPlayerManager::skip)
+                .addSeparator()
+                .addMenuItem("Exit", Platform::exit)
+                .build();
+
+        jukeboxImageView.setOnContextMenuRequested(event -> jukeboxContextMenu.show(jukeboxImageView, event.getScreenX(), event.getScreenY()));
     }
 }
