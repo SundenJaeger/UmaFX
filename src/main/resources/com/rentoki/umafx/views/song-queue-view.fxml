@@ -21,8 +21,8 @@
             </HBox>
             <HBox alignment="CENTER" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#removeSong" text="Remove Song" />
-                  <Button mnemonicParsing="false" onAction="#removeAllSong" text="Remove All Song" />
+                  <Button fx:id="removeSongButton" mnemonicParsing="false" onAction="#removeSong" text="Remove Song" />
+                  <Button fx:id="removeAllSongButton" mnemonicParsing="false" onAction="#removeAllSong" text="Remove All Song" />
                </children>
             </HBox>
          </children>

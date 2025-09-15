@@ -2,15 +2,13 @@ package com.rentoki.umafx.controller;
 
 import com.rentoki.umafx.model.Song;
 import com.rentoki.umafx.util.ContextMenuBuilder;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -28,6 +26,10 @@ public class SongQueueController {
 
     @FXML
     private ListView<Song> songQueueListView;
+    @FXML
+    private Button removeSongButton;
+    @FXML
+    private Button removeAllSongButton;
 
     @FXML
     private void initialize() {
@@ -35,6 +37,8 @@ public class SongQueueController {
         songQueueListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         setupDeleteKeyHandler();
         songQueueListView.setCellFactory(param -> new SongQueueListCell());
+        removeSongButton.disableProperty().bind(Bindings.isEmpty(songs).or(songQueueListView.getSelectionModel().selectedItemProperty().isNull()));
+        removeAllSongButton.disableProperty().bind(Bindings.isEmpty(songs));
     }
 
     @FXML
