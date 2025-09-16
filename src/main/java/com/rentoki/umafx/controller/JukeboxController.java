@@ -1,21 +1,22 @@
 package com.rentoki.umafx.controller;
 
+import com.rentoki.umafx.MainApplication;
 import com.rentoki.umafx.dialog.SongQueueDialog;
+import com.rentoki.umafx.exceptions.PreferencesRepositoryException;
 import com.rentoki.umafx.manager.AnimationManager;
 import com.rentoki.umafx.manager.MediaPlayerManager;
 import com.rentoki.umafx.model.Song;
 import com.rentoki.umafx.service.CharacterPreferenceService;
 import com.rentoki.umafx.service.WindowPreferencesService;
 import com.rentoki.umafx.util.ContextMenuBuilder;
+import com.rentoki.umafx.util.ShowAlert;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -29,6 +30,7 @@ public class JukeboxController {
     private final WindowPreferencesService windowPreferencesService;
     private final CharacterPreferenceService characterPreferenceService;
     private final MediaPlayerManager mediaPlayerManager;
+    private final MainApplication mainApplication;
 
     private final AnimationManager animationManager = new AnimationManager();
     private final StringProperty characterName = new SimpleStringProperty();
@@ -47,10 +49,11 @@ public class JukeboxController {
     @FXML
     private ImageView jukeboxImageView;
 
-    public JukeboxController(WindowPreferencesService windowPreferencesService, CharacterPreferenceService characterPreferenceService, MediaPlayerManager mediaPlayerManager) {
+    public JukeboxController(WindowPreferencesService windowPreferencesService, CharacterPreferenceService characterPreferenceService, MediaPlayerManager mediaPlayerManager, MainApplication mainApplication) {
         this.windowPreferencesService = windowPreferencesService;
         this.characterPreferenceService = characterPreferenceService;
         this.mediaPlayerManager = mediaPlayerManager;
+        this.mainApplication = mainApplication;
     }
 
     @FXML
@@ -122,22 +125,6 @@ public class JukeboxController {
         return characterName;
     }
 
-    public MenuItem playPauseItem() {
-        MenuItem menuItem = new MenuItem();
-
-        menuItem.textProperty().bind(Bindings.when(mediaPlayerManager.playingProperty()).then("Pause").otherwise("Play"));
-
-        menuItem.setOnAction(event -> {
-            if (mediaPlayerManager.isPlaying()) {
-                mediaPlayerManager.pause();
-            } else {
-                mediaPlayerManager.play();
-            }
-        });
-
-        return menuItem;
-    }
-
     public void openSongQueue() {
         if (songQueueDialog == null) {
             songQueueDialog = new SongQueueDialog();
@@ -155,14 +142,12 @@ public class JukeboxController {
     }
 
     private void setupJukeboxContextMenu() {
-        final MenuItem playPauseItem = playPauseItem();
-
         final ContextMenu jukeboxContextMenu = new ContextMenuBuilder()
                 .addMenuItem("Open Song Queue", this::openSongQueue)
                 .addSeparator()
-                .addMenuItem(playPauseItem)
-                .addMenuItem("Stop", mediaPlayerManager::stop)
-                .addMenuItem("Skip", mediaPlayerManager::skip)
+                .addMenuItem(mainApplication.playPauseItem())
+                .addMenuItem(mainApplication.stopItem())
+                .addMenuItem(mainApplication.skipItem())
                 .addSeparator()
                 .addMenuItem("Exit", () -> {
                     Platform.setImplicitExit(true);

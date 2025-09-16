@@ -11,11 +11,9 @@ import com.rentoki.umafx.repository.PropertiesRepositoryImpl;
 import com.rentoki.umafx.service.CharacterPreferenceService;
 import com.rentoki.umafx.service.WindowPreferencesService;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -46,7 +44,7 @@ public class MainApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(View.JUKEBOX.getFxmlPath()));
         fxmlLoader.setControllerFactory(param -> {
             if (param == JukeboxController.class) {
-                return new JukeboxController(windowPreferencesService, characterPreferenceService, mediaPlayerManager);
+                return new JukeboxController(windowPreferencesService, characterPreferenceService, mediaPlayerManager, this);
             } else {
                 try {
                     return param.getDeclaredConstructor().newInstance();
@@ -76,15 +74,48 @@ public class MainApplication extends Application {
         setTrayIcon();
     }
 
-    private void setTrayIcon() {
-        final MenuItem playPauseItem = jukeboxController.playPauseItem();
+    public MenuItem playPauseItem() {
+        MenuItem menuItem = new MenuItem();
 
-        FXTrayIcon fxTrayIcon = new FXTrayIcon.Builder(primaryStage)
+        menuItem.textProperty().bind(Bindings.when(mediaPlayerManager.playingProperty()).then("Pause").otherwise("Play"));
+        menuItem.disableProperty().bind(Bindings.isEmpty(mediaPlayerManager.getSongs()));
+
+        menuItem.setOnAction(event -> {
+            if (mediaPlayerManager.isPlaying()) {
+                mediaPlayerManager.pause();
+            } else {
+                mediaPlayerManager.play();
+            }
+        });
+
+        return menuItem;
+    }
+
+    public MenuItem stopItem() {
+        MenuItem menuItem = new MenuItem("Stop");
+
+        menuItem.setOnAction(event -> mediaPlayerManager.stop());
+        menuItem.disableProperty().bind(Bindings.isEmpty(mediaPlayerManager.getSongs()));
+
+        return menuItem;
+    }
+
+    public MenuItem skipItem() {
+        MenuItem menuItem = new MenuItem("Skip");
+
+        menuItem.setOnAction(event -> mediaPlayerManager.skip());
+        menuItem.disableProperty().bind(Bindings.isEmpty(mediaPlayerManager.getSongs()));
+
+        return menuItem;
+    }
+
+    private void setTrayIcon() {
+        final FXTrayIcon fxTrayIcon = new FXTrayIcon.Builder(primaryStage)
                 .menuItem("Open Song Queue", event -> jukeboxController.openSongQueue())
                 .separator()
-                .menuItem(playPauseItem)
-                .menuItem("Stop", event -> mediaPlayerManager.stop())
-                .menuItem("Skip", event -> mediaPlayerManager.skip())
+                .menuItem(playPauseItem())
+                .menuItem(stopItem())
+                .menuItem(skipItem())
                 .separator()
                 .addExitMenuItem("Exit UmaFX")
                 .show()
