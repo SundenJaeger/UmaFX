@@ -3,6 +3,8 @@ package com.rentoki.umafx;
 import com.dustinredmond.fxtrayicon.FXTrayIcon;
 import com.rentoki.umafx.controller.JukeboxController;
 import com.rentoki.umafx.enums.View;
+import com.rentoki.umafx.exceptions.EmptySongListException;
+import com.rentoki.umafx.exceptions.MediaPlayerException;
 import com.rentoki.umafx.interfaces.PreferencesRepository;
 import com.rentoki.umafx.interfaces.PropertiesRepository;
 import com.rentoki.umafx.manager.MediaPlayerManager;
@@ -10,6 +12,7 @@ import com.rentoki.umafx.repository.PreferencesRepositoryImpl;
 import com.rentoki.umafx.repository.PropertiesRepositoryImpl;
 import com.rentoki.umafx.service.CharacterPreferenceService;
 import com.rentoki.umafx.service.WindowPreferencesService;
+import com.rentoki.umafx.util.ShowAlert;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXMLLoader;
@@ -82,9 +85,9 @@ public class MainApplication extends Application {
 
         menuItem.setOnAction(event -> {
             if (mediaPlayerManager.isPlaying()) {
-                mediaPlayerManager.pause();
+                safeRun(mediaPlayerManager::pause);
             } else {
-                mediaPlayerManager.play();
+                safeRun(mediaPlayerManager::play);
             }
         });
 
@@ -94,7 +97,7 @@ public class MainApplication extends Application {
     public MenuItem stopItem() {
         MenuItem menuItem = new MenuItem("Stop");
 
-        menuItem.setOnAction(event -> mediaPlayerManager.stop());
+        menuItem.setOnAction(event -> safeRun(mediaPlayerManager::stop));
         menuItem.disableProperty().bind(Bindings.isEmpty(mediaPlayerManager.getSongs()));
 
         return menuItem;
@@ -103,7 +106,7 @@ public class MainApplication extends Application {
     public MenuItem skipItem() {
         MenuItem menuItem = new MenuItem("Skip");
 
-        menuItem.setOnAction(event -> mediaPlayerManager.skip());
+        menuItem.setOnAction(event -> safeRun(mediaPlayerManager::skip));
         menuItem.disableProperty().bind(Bindings.isEmpty(mediaPlayerManager.getSongs()));
 
         return menuItem;
@@ -120,5 +123,20 @@ public class MainApplication extends Application {
                 .addExitMenuItem("Exit UmaFX")
                 .show()
                 .build();
+    }
+
+    private void safeRun(RunnableWithException action) {
+        try {
+            action.run();
+        } catch (EmptySongListException e) {
+            ShowAlert.error().text("Error", e.getMessage()).showAndWait().ifPresent(buttonType -> jukeboxController.openSongQueue());
+        } catch (MediaPlayerException e) {
+            ShowAlert.showError(e.getMessage());
+        }
+    }
+
+    @FunctionalInterface
+    private interface RunnableWithException {
+        void run() throws MediaPlayerException, EmptySongListException;
     }
 }

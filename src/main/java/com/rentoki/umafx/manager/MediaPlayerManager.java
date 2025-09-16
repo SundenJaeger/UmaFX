@@ -1,11 +1,14 @@
 package com.rentoki.umafx.manager;
 
+import com.rentoki.umafx.exceptions.EmptySongListException;
+import com.rentoki.umafx.exceptions.MediaPlayerException;
 import com.rentoki.umafx.model.Song;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
 
 import java.nio.file.Path;
@@ -18,36 +21,57 @@ public class MediaPlayerManager {
     private int musicIndex;
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
 
-    public void play() {
+    public void play() throws EmptySongListException {
         if (!playing.get() && mediaPlayer != null) {
             mediaPlayer.play();
             return;
         }
 
-        if (!songs.isEmpty()) {
-            musicIndex = 0;
-            playSong(musicIndex);
+        if (songs.isEmpty()) {
+            throw new EmptySongListException("Cannot play: Song list is empty");
         }
+
+        musicIndex = 0;
+        playSong(musicIndex);
     }
 
-    public void pause() {
-        if (mediaPlayer != null) {
-            mediaPlayer.pause();
+    public void pause() throws EmptySongListException {
+        if (mediaPlayer == null) {
+            throw new MediaPlayerException("Cannot pause: No media loaded");
         }
+
+        if (songs.isEmpty()) {
+            throw new EmptySongListException("Cannot pause: Song list is empty");
+        }
+
+        mediaPlayer.pause();
     }
 
-    public void skip() {
-        if (mediaPlayer != null) {
-            musicIndex = (musicIndex + 1) % songs.size();
-            playSong(musicIndex);
+    public void skip() throws EmptySongListException {
+        if (mediaPlayer == null) {
+            throw new MediaPlayerException("Cannot skip: No media loaded");
         }
+
+        if (songs.isEmpty()) {
+            throw new EmptySongListException("Cannot skip: Song list is empty");
+        }
+
+        musicIndex = (musicIndex + 1) % songs.size();
+        playSong(musicIndex);
     }
 
-    public void stop() {
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-//            mediaPlayer.dispose();
+    public void stop() throws EmptySongListException {
+        if (mediaPlayer == null) {
+            throw new MediaPlayerException("Cannot stop: No media loaded");
         }
+
+        if (songs.isEmpty()) {
+            throw new EmptySongListException("Cannot stop: Song list is empty");
+        }
+
+        mediaPlayer.stop();
+//        mediaPlayer.dispose();
+
     }
 
     public void addSong(List<Path> paths) {
@@ -72,8 +96,13 @@ public class MediaPlayerManager {
             mediaPlayer.dispose();
         }
 
-        media = new Media(songs.get(index).path().toUri().toString());
-        mediaPlayer = new MediaPlayer(media);
+        Song song = songs.get(index);
+        try {
+            media = new Media(song.path().toUri().toString());
+            mediaPlayer = new MediaPlayer(media);
+        } catch (MediaException e) {
+            throw new MediaPlayerException("Invalid media file: " + song.path(), e);
+        }
 
         mediaPlayer.setOnPaused(() -> playing.set(false));
         mediaPlayer.setOnPlaying(() -> playing.set(true));
@@ -81,6 +110,9 @@ public class MediaPlayerManager {
         mediaPlayer.setOnEndOfMedia(() -> {
             musicIndex = (musicIndex + 1) % songs.size();
             playSong(musicIndex);
+        });
+        mediaPlayer.setOnError(() -> {
+            throw new MediaPlayerException("Media error: " + mediaPlayer.getError().getMessage());
         });
 
         mediaPlayer.play();
