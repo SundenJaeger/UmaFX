@@ -59,19 +59,19 @@ public class ShowAlert {
         warning().text(ALERT_WARNING_TITLE, null, content).show();
     }
 
-    private static AlertBuilder info() {
+    public static AlertBuilder info() {
         return new AlertBuilder(Alert.AlertType.INFORMATION);
     }
 
-    private static AlertBuilder error() {
+    public static AlertBuilder error() {
         return new AlertBuilder(Alert.AlertType.ERROR);
     }
 
-    private static AlertBuilder confirmation() {
+    public static AlertBuilder confirmation() {
         return new AlertBuilder(Alert.AlertType.CONFIRMATION);
     }
 
-    private static AlertBuilder warning() {
+    public static AlertBuilder warning() {
         return new AlertBuilder(Alert.AlertType.WARNING);
     }
 }
