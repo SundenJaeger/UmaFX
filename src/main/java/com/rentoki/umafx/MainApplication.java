@@ -5,6 +5,7 @@ import com.rentoki.umafx.controller.JukeboxController;
 import com.rentoki.umafx.enums.View;
 import com.rentoki.umafx.exceptions.EmptySongListException;
 import com.rentoki.umafx.exceptions.MediaPlayerException;
+import com.rentoki.umafx.exceptions.PreferencesRepositoryException;
 import com.rentoki.umafx.interfaces.PreferencesRepository;
 import com.rentoki.umafx.interfaces.PropertiesRepository;
 import com.rentoki.umafx.manager.MediaPlayerManager;
@@ -117,7 +118,12 @@ public class MainApplication extends Application {
                 .menuItem("Reset Window", event -> {
                     primaryStage.setX(0);
                     primaryStage.setY(0);
-                    windowPreferencesService.savePos(0, 0);
+
+                    try {
+                        windowPreferencesService.savePos(0, 0);
+                    } catch (PreferencesRepositoryException e) {
+                        ShowAlert.showError(e.getMessage());
+                    }
                 })
                 .separator()
                 .menuItem("Open Song Queue", event -> jukeboxController.openSongQueue())

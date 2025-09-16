@@ -1,6 +1,6 @@
 package com.rentoki.umafx.exceptions;
 
-public class PreferencesRepositoryException extends RuntimeException {
+public class PreferencesRepositoryException extends Exception {
     public PreferencesRepositoryException() {
         super();
     }

@@ -1,5 +1,6 @@
 package com.rentoki.umafx.service;
 
+import com.rentoki.umafx.exceptions.PreferencesRepositoryException;
 import com.rentoki.umafx.interfaces.PreferencesRepository;
 
 public class WindowPreferencesService {
@@ -12,16 +13,16 @@ public class WindowPreferencesService {
         this.preferencesRepository = preferencesRepository;
     }
 
-    public void savePos(double posX, double posY) {
+    public void savePos(double posX, double posY) throws PreferencesRepositoryException {
         savePosX(posX);
         savePosY(posY);
     }
 
-    public void savePosX(double posX) {
+    public void savePosX(double posX) throws PreferencesRepositoryException {
         preferencesRepository.putDouble(WINDOW_POS_X, posX);
     }
 
-    public void savePosY(double posY) {
+    public void savePosY(double posY) throws PreferencesRepositoryException {
         preferencesRepository.putDouble(WINDOW_POS_Y, posY);
     }
 

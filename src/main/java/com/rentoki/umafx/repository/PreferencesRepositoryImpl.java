@@ -14,7 +14,7 @@ public class PreferencesRepositoryImpl implements PreferencesRepository {
     }
 
     @Override
-    public void putDouble(String key, double value) {
+    public void putDouble(String key, double value) throws PreferencesRepositoryException {
         try {
             preferences.putDouble(key, value);
             preferences.flush();
@@ -29,7 +29,7 @@ public class PreferencesRepositoryImpl implements PreferencesRepository {
     }
 
     @Override
-    public void clear() {
+    public void clear() throws PreferencesRepositoryException {
         try {
             preferences.clear();
         } catch (BackingStoreException e) {

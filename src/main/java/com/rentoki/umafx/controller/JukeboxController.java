@@ -108,6 +108,8 @@ public class JukeboxController {
 
     @FXML
     private void spriteReleased(MouseEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
         if (event.getButton() == MouseButton.PRIMARY) {
             if (posX != lastPosX || posY != lastPosY) {
                 System.out.println(posX);
@@ -116,7 +118,19 @@ public class JukeboxController {
                 lastPosX = posX;
                 lastPosY = posY;
 
-                windowPreferencesService.savePos(lastPosX, lastPosY);
+                try {
+                    windowPreferencesService.savePos(lastPosX, lastPosY);
+                } catch (PreferencesRepositoryException e) {
+                    ShowAlert.showError(e.getMessage());
+                    stage.setX(0);
+                    stage.setY(0);
+
+                    try {
+                        windowPreferencesService.savePos(0, 0);
+                    } catch (PreferencesRepositoryException ex) {
+                        ShowAlert.showError(ex.getMessage());
+                    }
+                }
             }
         }
     }
