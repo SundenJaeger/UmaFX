@@ -114,6 +114,12 @@ public class MainApplication extends Application {
 
     private void setTrayIcon() {
         final FXTrayIcon fxTrayIcon = new FXTrayIcon.Builder(primaryStage)
+                .menuItem("Reset Window", event -> {
+                    primaryStage.setX(0);
+                    primaryStage.setY(0);
+                    windowPreferencesService.savePos(0, 0);
+                })
+                .separator()
                 .menuItem("Open Song Queue", event -> jukeboxController.openSongQueue())
                 .separator()
                 .menuItem(playPauseItem())
