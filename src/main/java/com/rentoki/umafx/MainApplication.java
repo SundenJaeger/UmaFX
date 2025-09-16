@@ -15,6 +15,7 @@ import com.rentoki.umafx.service.CharacterPreferenceService;
 import com.rentoki.umafx.service.WindowPreferencesService;
 import com.rentoki.umafx.util.ShowAlert;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -74,6 +75,11 @@ public class MainApplication extends Application {
         stage.setX(windowPreferencesService.getPosX());
         stage.setY(windowPreferencesService.getPosY());
         stage.setAlwaysOnTop(true);
+        stage.setOnCloseRequest(event -> {
+            Platform.setImplicitExit(true);
+            Platform.exit();
+            System.exit(0);
+        });
 
         setTrayIcon();
     }
