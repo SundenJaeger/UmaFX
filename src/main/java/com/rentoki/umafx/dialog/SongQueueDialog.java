@@ -1,7 +1,9 @@
 package com.rentoki.umafx.dialog;
 
 import com.rentoki.umafx.controller.SongQueueController;
+import com.rentoki.umafx.enums.MediaResources;
 import com.rentoki.umafx.enums.View;
+import com.rentoki.umafx.exceptions.MediaResourcesException;
 import com.rentoki.umafx.model.Song;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
@@ -32,6 +34,12 @@ public class SongQueueDialog extends Dialog<ObservableList<Song>> {
 
         Stage stage = (Stage) dialogPane.getScene().getWindow();
         stage.setAlwaysOnTop(true);
+
+        try {
+            stage.getIcons().add(MediaResources.APP_ICON.getImage(SongQueueDialog.class));
+        } catch (MediaResourcesException e) {
+            stage.getIcons().clear();
+        }
 
         dialogPane.setContent(loadSongQueueView());
         dialogPane.getButtonTypes().addAll(SAVE_BUTTON_TYPE, CANCEL_BUTTON_TYPE);

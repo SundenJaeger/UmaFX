@@ -2,9 +2,11 @@ package com.rentoki.umafx;
 
 import com.dustinredmond.fxtrayicon.FXTrayIcon;
 import com.rentoki.umafx.controller.JukeboxController;
+import com.rentoki.umafx.enums.MediaResources;
 import com.rentoki.umafx.enums.View;
 import com.rentoki.umafx.exceptions.EmptySongListException;
 import com.rentoki.umafx.exceptions.MediaPlayerException;
+import com.rentoki.umafx.exceptions.MediaResourcesException;
 import com.rentoki.umafx.exceptions.PreferencesRepositoryException;
 import com.rentoki.umafx.interfaces.PreferencesRepository;
 import com.rentoki.umafx.interfaces.PropertiesRepository;
@@ -72,6 +74,13 @@ public class MainApplication extends Application {
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(scene);
         stage.show();
+
+        try {
+            stage.getIcons().add(MediaResources.APP_ICON.getImage(MainApplication.class));
+        } catch (MediaResourcesException e) {
+            stage.getIcons().clear();
+        }
+
         stage.setX(windowPreferencesService.getPosX());
         stage.setY(windowPreferencesService.getPosY());
         stage.setAlwaysOnTop(true);
@@ -120,27 +129,33 @@ public class MainApplication extends Application {
     }
 
     private void setTrayIcon() {
-        final FXTrayIcon fxTrayIcon = new FXTrayIcon.Builder(primaryStage)
-                .menuItem("Reset Window", event -> {
-                    primaryStage.setX(0);
-                    primaryStage.setY(0);
+        FXTrayIcon fxTrayIcon;
 
-                    try {
-                        windowPreferencesService.savePos(0, 0);
-                    } catch (PreferencesRepositoryException e) {
-                        ShowAlert.showError(e.getMessage());
-                    }
-                })
-                .separator()
-                .menuItem("Open Song Queue", event -> jukeboxController.openSongQueue())
-                .separator()
-                .menuItem(playPauseItem())
-                .menuItem(stopItem())
-                .menuItem(skipItem())
-                .separator()
-                .addExitMenuItem("Exit UmaFX")
-                .show()
-                .build();
+        try {
+            fxTrayIcon = new FXTrayIcon(primaryStage, MediaResources.APP_ICON.getImage(MainApplication.class));
+        } catch (MediaResourcesException e) {
+            fxTrayIcon = new FXTrayIcon(primaryStage);
+        }
+
+        fxTrayIcon.addMenuItem("Reset Window", event -> {
+            primaryStage.setX(0);
+            primaryStage.setY(0);
+
+            try {
+                windowPreferencesService.savePos(0, 0);
+            } catch (PreferencesRepositoryException e) {
+                ShowAlert.showError(e.getMessage());
+            }
+        });
+        fxTrayIcon.insertSeparator(1);
+        fxTrayIcon.addMenuItem("Open Song Queue", event -> jukeboxController.openSongQueue());
+        fxTrayIcon.addSeparator();
+        fxTrayIcon.addMenuItem(playPauseItem());
+        fxTrayIcon.addMenuItem(stopItem());
+        fxTrayIcon.addMenuItem(skipItem());
+        fxTrayIcon.addSeparator();
+        fxTrayIcon.addExitItem("Exit UmaFX");
+        fxTrayIcon.show();
     }
 
     private void safeRun(RunnableWithException action) {
