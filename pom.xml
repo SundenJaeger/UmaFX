@@ -6,7 +6,7 @@
 
     <groupId>com.rentoki</groupId>
     <artifactId>UmaFX</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <name>UmaFX</name>
 
     <properties>
@@ -18,12 +18,12 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>24.0.1</version>
+            <version>25</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>24.0.1</version>
+            <version>25</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-media</artifactId>
-            <version>24.0.1</version>
+            <version>25</version>
         </dependency>
         <dependency>
             <groupId>com.dustinredmond.fxtrayicon</groupId>
