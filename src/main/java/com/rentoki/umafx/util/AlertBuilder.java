@@ -3,6 +3,8 @@ package com.rentoki.umafx.util;
 import com.rentoki.umafx.interfaces.IAlertBuilder;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
+import javafx.stage.Stage;
 
 import java.util.Optional;
 
@@ -11,6 +13,11 @@ public class AlertBuilder implements IAlertBuilder<AlertBuilder> {
 
     public AlertBuilder(Alert.AlertType alertType) {
         this.alert = new Alert(alertType);
+
+        final DialogPane dialogPane = this.alert.getDialogPane();
+        Stage stage = (Stage) dialogPane.getScene().getWindow();
+
+        stage.setAlwaysOnTop(true);
     }
 
     @Override
