@@ -1,7 +1,11 @@
 package com.rentoki.umafx.controller;
 
+import com.rentoki.umafx.enums.ErrorHeaders;
+import com.rentoki.umafx.exceptions.DesktopActionException;
 import com.rentoki.umafx.model.Song;
 import com.rentoki.umafx.util.ContextMenuBuilder;
+import com.rentoki.umafx.util.DesktopAction;
+import com.rentoki.umafx.util.ShowAlert;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -102,6 +106,8 @@ public class SongQueueController {
 
     private class SongQueueListCell extends ListCell<Song> {
         private final ContextMenu contextMenu = new ContextMenuBuilder()
+                .addMenuItem(openFileLocation())
+                .addSeparator()
                 .addMenuItem("Remove", SongQueueController.this::removeSong)
                 .build();
 
@@ -116,5 +122,21 @@ public class SongQueueController {
                 setContextMenu(contextMenu);
             }
         }
+    }
+
+    private MenuItem openFileLocation() {
+        MenuItem menuItem = new MenuItem("Open file location");
+
+        menuItem.setOnAction(event -> {
+            try {
+                Song selectedSong = songQueueListView.getSelectionModel().getSelectedItem();
+                DesktopAction.openFileLocation(selectedSong.path().toFile());
+            } catch (DesktopActionException e) {
+                ShowAlert.showError(ErrorHeaders.GENERAL_ERROR.getMessage(), e.getMessage());
+            }
+        });
+        menuItem.disableProperty().bind(Bindings.size(songQueueListView.getSelectionModel().getSelectedItems()).greaterThan(1));
+
+        return menuItem;
     }
 }
