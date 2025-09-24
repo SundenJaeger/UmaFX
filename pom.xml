@@ -36,9 +36,9 @@
             <version>25</version>
         </dependency>
         <dependency>
-            <groupId>com.dustinredmond.fxtrayicon</groupId>
-            <artifactId>FXTrayIcon</artifactId>
-            <version>4.2.3</version>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>25</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

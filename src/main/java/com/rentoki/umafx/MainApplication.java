@@ -163,6 +163,7 @@ public class MainApplication extends Application {
         fxTrayIcon.addMenuItem(playPauseItem());
         fxTrayIcon.addMenuItem(stopItem());
         fxTrayIcon.addMenuItem(skipItem());
+        fxTrayIcon.addMenuItem(volumeItem());
         fxTrayIcon.addSeparator();
         fxTrayIcon.addExitItem("Exit UmaFX");
         fxTrayIcon.show();
