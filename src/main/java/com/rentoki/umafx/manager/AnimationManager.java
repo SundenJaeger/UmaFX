@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AnimationManager {
     private static final int FRAMES_PER_SECOND = 30;
@@ -59,6 +60,24 @@ public class AnimationManager {
         if (animationTimeline != null) {
             animationTimeline.stop();
         }
+    }
+
+    public List<String> getAnimationVariants(String baseName) {
+        return spriteSheetMap.keySet().stream()
+                .filter(name -> name.startsWith(baseName + "_"))
+                .collect(Collectors.toList());
+    }
+
+
+    public void playRandomVariant(String baseName, ImageView imageView, Runnable onAnimationComplete) {
+        List<String> variants = getAnimationVariants(baseName);
+        if (variants.isEmpty()) {
+            playAnimation(baseName, imageView, onAnimationComplete);
+            return;
+        }
+
+        String randomVariant = variants.get((int) (Math.random() * variants.size()));
+        playAnimation(randomVariant, imageView, onAnimationComplete);
     }
 
     private void startAnimation(ImageView imageView, boolean loop) {

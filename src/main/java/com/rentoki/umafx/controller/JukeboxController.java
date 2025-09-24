@@ -67,7 +67,7 @@ public class JukeboxController {
 
         mediaPlayerManager.playingProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                animationManager.playAnimation("ready", spriteImageView, () -> animationManager.playAnimation("dance", spriteImageView, null));
+                animationManager.playAnimation("ready", spriteImageView, () -> animationManager.playRandomVariant("dance", spriteImageView, null));
             } else {
                 animationManager.playAnimation("idle", spriteImageView, null);
             }
