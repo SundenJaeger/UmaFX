@@ -11,15 +11,19 @@ import com.rentoki.umafx.service.WindowPreferencesService;
 import com.rentoki.umafx.util.ContextMenuBuilder;
 import com.rentoki.umafx.util.ShowAlert;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.nio.file.Path;
@@ -48,6 +52,12 @@ public class JukeboxController {
     private ImageView spriteImageView;
     @FXML
     private ImageView jukeboxImageView;
+    @FXML
+    private VBox volumeContainer;
+    @FXML
+    private Slider volumeSlider;
+    @FXML
+    private Label volumeLabel;
 
     public JukeboxController(WindowPreferencesService windowPreferencesService, CharacterPreferenceService characterPreferenceService, MediaPlayerManager mediaPlayerManager, MainApplication mainApplication) {
         this.windowPreferencesService = windowPreferencesService;
@@ -74,6 +84,30 @@ public class JukeboxController {
         });
 
         setupJukeboxContextMenu();
+
+        volumeContainer.setVisible(false);
+
+        volumeSlider.valueProperty().bindBidirectional(
+                new SimpleDoubleProperty() {
+                    {
+                        mediaPlayerManager.volumeProperty().addListener((obs, oldVal, newVal) ->
+                                volumeSlider.setValue(newVal.doubleValue() * 100)
+                        );
+                    }
+
+                    @Override
+                    public double get() {
+                        return mediaPlayerManager.getVolume();
+                    }
+
+                    @Override
+                    public void set(double value) {
+                        mediaPlayerManager.setVolume(value);
+                    }
+                }
+        );
+
+        volumeLabel.textProperty().bind(volumeSlider.valueProperty().asString("%.0f%%"));
     }
 
     @FXML
@@ -139,6 +173,10 @@ public class JukeboxController {
         return characterName;
     }
 
+    public VBox getVolumeContainer() {
+        return volumeContainer;
+    }
+
     public void openSongQueue() {
         if (songQueueDialog == null) {
             songQueueDialog = new SongQueueDialog();
@@ -162,6 +200,7 @@ public class JukeboxController {
                 .addMenuItem(mainApplication.playPauseItem())
                 .addMenuItem(mainApplication.stopItem())
                 .addMenuItem(mainApplication.skipItem())
+                .addMenuItem(mainApplication.volumeItem())
                 .addSeparator()
                 .addMenuItem("Exit", () -> {
                     Platform.setImplicitExit(true);

@@ -21,6 +21,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -126,6 +127,15 @@ public class MainApplication extends Application {
         menuItem.disableProperty().bind(Bindings.isEmpty(mediaPlayerManager.getSongs()));
 
         return menuItem;
+    }
+
+    public CheckMenuItem volumeItem() {
+        CheckMenuItem checkMenuItem = new CheckMenuItem("Volume");
+
+        checkMenuItem.disableProperty().bind(Bindings.isEmpty(mediaPlayerManager.getSongs()));
+        checkMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> jukeboxController.getVolumeContainer().setVisible(newValue));
+
+        return checkMenuItem;
     }
 
     private void setTrayIcon() {
