@@ -4,7 +4,9 @@ import com.rentoki.umafx.exceptions.EmptySongListException;
 import com.rentoki.umafx.exceptions.MediaPlayerException;
 import com.rentoki.umafx.model.Song;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.media.Media;
@@ -20,6 +22,7 @@ public class MediaPlayerManager {
     private MediaPlayer mediaPlayer;
     private int musicIndex;
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
+    private final DoubleProperty volume = new SimpleDoubleProperty(0.5);
 
     public void play() throws EmptySongListException {
         if (!playing.get() && mediaPlayer != null) {
@@ -90,6 +93,18 @@ public class MediaPlayerManager {
         return playing.get();
     }
 
+    public double getVolume() {
+        return volume.get() * 100;
+    }
+
+    public void setVolume(double volume) {
+        this.volume.set(volume / 100.00);
+    }
+
+    public DoubleProperty volumeProperty() {
+        return volume;
+    }
+
     private void playSong(int index) {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
@@ -100,6 +115,8 @@ public class MediaPlayerManager {
         try {
             media = new Media(song.path().toUri().toString());
             mediaPlayer = new MediaPlayer(media);
+
+            mediaPlayer.volumeProperty().bind(volume);
         } catch (MediaException e) {
             throw new MediaPlayerException("Invalid media file: " + song.path(), e);
         }
