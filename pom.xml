@@ -36,6 +36,11 @@
             <version>25</version>
         </dependency>
         <dependency>
+            <groupId>com.rentoki</groupId>
+            <artifactId>FXTrayIcon</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
             <version>25</version>
