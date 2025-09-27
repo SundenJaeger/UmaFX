@@ -26,6 +26,7 @@ Grab the latest installer from the [releases](https://github.com/SundenJaeger/Um
     - Add Folder: imports all .mp3 and .wav files in the selected folder
     - Add Song: import multiple music files
     - Select items and press Delete or use the context menu to remove
+- Right-click the character to switch characters
 - Right-click the jukebox for the context menu:
     - Open Song Queue
     - Play/Pause, Stop, Skip
@@ -42,7 +43,7 @@ Configuration files and spritesheet templates are located in your **Documents/Um
 
 ### Config.properties
 
-You can change starting character by changing **`Character`** value
+You can change starting character by changing `Character` value
 
 ```
 Character=<character folder name>
@@ -68,20 +69,24 @@ There are three supported animation states:
 - `ready`
 - `dance`
 
+You can also define multiple variants of an animation state by appending an underscore and a number:
+(e.g., `dance_01`, `dance_02`, `dance_03`, …).
+The program will recognize all animations with the same base name.
+
 **Example:**
 
 ```
-"name": "idle",
-"file": "teio_outfit_01_idle.png",
-"columns": 6,
-"rows": 14,
-"totalFrames": 80,
+"name": "dance_01",
+"file": "teio_outfit_01_dance_01.png",
+"columns": 8,
+"rows": 12,
+"totalFrames": 90,
 "frameWidth": 375,
 "frameHeight": 375,
 "loop": true
 ```
 
-- `name` - Animation state (`idle`, `ready`, `dance`)
+- `name` - Animation state (`idle`, `ready`, `dance` or numbered variant (`dance_01`, `dance_02`, …)
 - `file` - Filename of the spritesheet image (must be inside the same folder)
 - `columns` - Number of columns in the spritesheet
 - `rows` - Number of rows in the spritesheet
