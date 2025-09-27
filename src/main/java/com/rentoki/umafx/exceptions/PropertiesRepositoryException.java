@@ -1,6 +1,6 @@
 package com.rentoki.umafx.exceptions;
 
-public class PropertiesRepositoryException extends Exception {
+public class PropertiesRepositoryException extends RuntimeException {
     public PropertiesRepositoryException() {
         super();
     }

@@ -20,7 +20,7 @@
             <Slider fx:id="volumeSlider" orientation="VERTICAL" prefHeight="95.0" prefWidth="14.0" />
          </children>
       </VBox>
-      <ImageView fx:id="spriteImageView" cache="true" cacheHint="SPEED" fitHeight="150.0" fitWidth="200.0" layoutX="86.0" layoutY="75.0" onMouseDragged="#spriteDragged" onMousePressed="#spritePressed" onMouseReleased="#spriteReleased" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="spriteImageView" cache="true" cacheHint="SPEED" fitHeight="150.0" fitWidth="200.0" layoutX="86.0" layoutY="75.0" onMouseClicked="#spriteClicked" onMouseDragged="#spriteDragged" onMousePressed="#spritePressed" onMouseReleased="#spriteReleased" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="jukeboxImageView" fitHeight="82.0" fitWidth="72.0" layoutX="50.0" layoutY="129.0" onMouseClicked="#playJukebox" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../media/temp.png" />

@@ -13,7 +13,7 @@ import com.rentoki.umafx.interfaces.PropertiesRepository;
 import com.rentoki.umafx.manager.MediaPlayerManager;
 import com.rentoki.umafx.repository.PreferencesRepositoryImpl;
 import com.rentoki.umafx.repository.PropertiesRepositoryImpl;
-import com.rentoki.umafx.service.CharacterPreferenceService;
+import com.rentoki.umafx.service.CharacterPropertiesService;
 import com.rentoki.umafx.service.WindowPreferencesService;
 import com.rentoki.umafx.util.ShowAlert;
 import javafx.application.Application;
@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 public class MainApplication extends Application {
-    private final CharacterPreferenceService characterPreferenceService;
+    private final CharacterPropertiesService characterPropertiesService;
     private final WindowPreferencesService windowPreferencesService;
     private final MediaPlayerManager mediaPlayerManager = new MediaPlayerManager();
     private final BooleanProperty volumeVisible = new SimpleBooleanProperty(false);
@@ -43,7 +43,7 @@ public class MainApplication extends Application {
 
     public MainApplication() {
         PropertiesRepository propertiesRepository = new PropertiesRepositoryImpl();
-        this.characterPreferenceService = new CharacterPreferenceService(propertiesRepository);
+        this.characterPropertiesService = new CharacterPropertiesService(propertiesRepository);
 
         PreferencesRepository preferencesRepository = new PreferencesRepositoryImpl(MainApplication.class);
         this.windowPreferencesService = new WindowPreferencesService(preferencesRepository);
@@ -55,7 +55,7 @@ public class MainApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource(View.JUKEBOX.getFxmlPath()));
         fxmlLoader.setControllerFactory(param -> {
             if (param == JukeboxController.class) {
-                return new JukeboxController(windowPreferencesService, characterPreferenceService, mediaPlayerManager, this);
+                return new JukeboxController(windowPreferencesService, characterPropertiesService, mediaPlayerManager, this);
             } else {
                 try {
                     return param.getDeclaredConstructor().newInstance();
@@ -69,7 +69,7 @@ public class MainApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         jukeboxController = fxmlLoader.getController();
 
-        characterPreferenceService.initializeProperties();
+        characterPropertiesService.initializeProperties();
 
         scene.setFill(Color.TRANSPARENT);
         scene.getStylesheets().add(MainApplication.class.getResource("css/base.css").toExternalForm());

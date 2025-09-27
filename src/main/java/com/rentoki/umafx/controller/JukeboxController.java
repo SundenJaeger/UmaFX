@@ -2,11 +2,13 @@ package com.rentoki.umafx.controller;
 
 import com.rentoki.umafx.MainApplication;
 import com.rentoki.umafx.dialog.SongQueueDialog;
+import com.rentoki.umafx.enums.ErrorHeaders;
+import com.rentoki.umafx.exceptions.InvalidCharacterFolderException;
 import com.rentoki.umafx.exceptions.PreferencesRepositoryException;
 import com.rentoki.umafx.manager.AnimationManager;
 import com.rentoki.umafx.manager.MediaPlayerManager;
 import com.rentoki.umafx.model.Song;
-import com.rentoki.umafx.service.CharacterPreferenceService;
+import com.rentoki.umafx.service.CharacterPropertiesService;
 import com.rentoki.umafx.service.WindowPreferencesService;
 import com.rentoki.umafx.util.ContextMenuBuilder;
 import com.rentoki.umafx.util.ShowAlert;
@@ -32,7 +34,7 @@ import java.util.Optional;
 
 public class JukeboxController {
     private final WindowPreferencesService windowPreferencesService;
-    private final CharacterPreferenceService characterPreferenceService;
+    private final CharacterPropertiesService characterPropertiesService;
     private final MediaPlayerManager mediaPlayerManager;
     private final MainApplication mainApplication;
 
@@ -59,16 +61,16 @@ public class JukeboxController {
     @FXML
     private Label volumeLabel;
 
-    public JukeboxController(WindowPreferencesService windowPreferencesService, CharacterPreferenceService characterPreferenceService, MediaPlayerManager mediaPlayerManager, MainApplication mainApplication) {
+    public JukeboxController(WindowPreferencesService windowPreferencesService, CharacterPropertiesService characterPropertiesService, MediaPlayerManager mediaPlayerManager, MainApplication mainApplication) {
         this.windowPreferencesService = windowPreferencesService;
-        this.characterPreferenceService = characterPreferenceService;
+        this.characterPropertiesService = characterPropertiesService;
         this.mediaPlayerManager = mediaPlayerManager;
         this.mainApplication = mainApplication;
     }
 
     @FXML
     private void initialize() {
-        characterNameProperty().bind(characterPreferenceService.characterProperty());
+        characterNameProperty().bind(characterPropertiesService.characterProperty());
         characterName.addListener((observable, oldValue, newValue) -> {
             if (newValue != null && !newValue.trim().isEmpty()) {
                 animationManager.loadAnimation(newValue, spriteImageView);
@@ -112,6 +114,13 @@ public class JukeboxController {
     private void playJukebox(MouseEvent event) {
         if (event.getButton() == MouseButton.PRIMARY) {
             openSongQueue();
+        }
+    }
+
+    @FXML
+    private void spriteClicked(MouseEvent event) {
+        if (event.getButton() == MouseButton.SECONDARY) {
+            changeCharacter();
         }
     }
 
@@ -209,5 +218,32 @@ public class JukeboxController {
 
         jukeboxImageView.setOnContextMenuRequested(event -> jukeboxContextMenu.show(jukeboxImageView, event.getScreenX(), event.getScreenY()));
         volumeContainer.visibleProperty().bind(mainApplication.volumeVisibleProperty());
+    }
+
+
+    private void changeCharacter() {
+        List<String> availableCharacters;
+        try {
+            availableCharacters = characterPropertiesService.getAvailableCharacters();
+        } catch (InvalidCharacterFolderException e) {
+            ShowAlert.showError(ErrorHeaders.GENERAL_ERROR.getMessage(), e.getMessage());
+            return;
+        }
+
+        if (availableCharacters.isEmpty()) {
+            return;
+        }
+
+        String currentCharacter = characterName.get();
+        int currentIndex = availableCharacters.indexOf(currentCharacter);
+        String nextCharacter;
+
+        if (currentIndex == -1 || currentIndex == availableCharacters.size() - 1) {
+            nextCharacter = availableCharacters.getFirst();
+        } else {
+            nextCharacter = availableCharacters.get(currentIndex + 1);
+        }
+
+        characterPropertiesService.setCharacter(nextCharacter);
     }
 }
