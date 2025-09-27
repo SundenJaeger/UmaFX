@@ -73,7 +73,15 @@ public class JukeboxController {
         characterNameProperty().bind(characterPropertiesService.characterProperty());
         characterName.addListener((observable, oldValue, newValue) -> {
             if (newValue != null && !newValue.trim().isEmpty()) {
+                boolean wasPlaying = mediaPlayerManager.isPlaying();
+
                 animationManager.loadAnimation(newValue, spriteImageView);
+
+                if (wasPlaying) {
+                    animationManager.playAnimation("ready", spriteImageView, () -> animationManager.playRandomVariant("dance", spriteImageView, null));
+                } else {
+                    animationManager.playAnimation("idle", spriteImageView, null);
+                }
             }
         });
 
