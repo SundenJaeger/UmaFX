@@ -85,8 +85,6 @@ public class JukeboxController {
 
         setupJukeboxContextMenu();
 
-        volumeContainer.setVisible(false);
-
         volumeSlider.valueProperty().bindBidirectional(
                 new SimpleDoubleProperty() {
                     {
@@ -210,5 +208,6 @@ public class JukeboxController {
                 .build();
 
         jukeboxImageView.setOnContextMenuRequested(event -> jukeboxContextMenu.show(jukeboxImageView, event.getScreenX(), event.getScreenY()));
+        volumeContainer.visibleProperty().bind(mainApplication.volumeVisibleProperty());
     }
 }

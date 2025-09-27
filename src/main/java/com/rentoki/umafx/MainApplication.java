@@ -19,6 +19,8 @@ import com.rentoki.umafx.util.ShowAlert;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckMenuItem;
@@ -34,6 +36,7 @@ public class MainApplication extends Application {
     private final CharacterPreferenceService characterPreferenceService;
     private final WindowPreferencesService windowPreferencesService;
     private final MediaPlayerManager mediaPlayerManager = new MediaPlayerManager();
+    private final BooleanProperty volumeVisible = new SimpleBooleanProperty(false);
 
     private Stage primaryStage;
     private JukeboxController jukeboxController;
@@ -133,9 +136,13 @@ public class MainApplication extends Application {
         CheckMenuItem checkMenuItem = new CheckMenuItem("Volume");
 
         checkMenuItem.disableProperty().bind(Bindings.isEmpty(mediaPlayerManager.getSongs()));
-        checkMenuItem.selectedProperty().addListener((observable, oldValue, newValue) -> jukeboxController.getVolumeContainer().setVisible(newValue));
+        checkMenuItem.selectedProperty().bindBidirectional(volumeVisible);
 
         return checkMenuItem;
+    }
+
+    public BooleanProperty volumeVisibleProperty() {
+        return volumeVisible;
     }
 
     private void setTrayIcon() {
