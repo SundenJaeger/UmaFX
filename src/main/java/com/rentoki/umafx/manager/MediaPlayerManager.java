@@ -107,8 +107,10 @@ public class MediaPlayerManager {
 
     private void playSong(int index) {
         if (mediaPlayer != null) {
+            mediaPlayer.volumeProperty().unbind();
             mediaPlayer.stop();
             mediaPlayer.dispose();
+            mediaPlayer = null;
         }
 
         Song song = songs.get(index);
