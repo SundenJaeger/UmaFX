@@ -17,5 +17,6 @@ module com.rentoki.umafx {
     exports com.rentoki.umafx.interfaces;
     exports com.rentoki.umafx.exceptions;
     exports com.rentoki.umafx.manager;
+    exports com.rentoki.umafx.enums;
     opens com.rentoki.umafx.controller to javafx.fxml;
 }
