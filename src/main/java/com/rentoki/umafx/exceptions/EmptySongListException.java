@@ -1,6 +1,6 @@
 package com.rentoki.umafx.exceptions;
 
-public class EmptySongListException extends Exception {
+public class EmptySongListException extends RuntimeException {
     public EmptySongListException() {
         super();
     }

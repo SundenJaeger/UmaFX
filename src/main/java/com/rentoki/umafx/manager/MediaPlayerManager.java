@@ -18,60 +18,43 @@ import java.util.List;
 
 public class MediaPlayerManager {
     private final ObservableList<Song> songs = FXCollections.observableArrayList();
-    private Media media;
+
     private MediaPlayer mediaPlayer;
     private int musicIndex;
+
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
     private final DoubleProperty volume = new SimpleDoubleProperty(0.5);
 
-    public void play() throws EmptySongListException {
+    /* ---------------- Public API ---------------- */
+
+    public void play() {
+        if (songs.isEmpty()) {
+            throw new EmptySongListException("Cannot play: Song list is empty");
+        }
+
         if (!playing.get() && mediaPlayer != null) {
             mediaPlayer.play();
             return;
-        }
-
-        if (songs.isEmpty()) {
-            throw new EmptySongListException("Cannot play: Song list is empty");
         }
 
         musicIndex = 0;
         playSong(musicIndex);
     }
 
-    public void pause() throws EmptySongListException {
-        if (mediaPlayer == null) {
-            throw new MediaPlayerException("Cannot pause: No media loaded");
-        }
-
-        if (songs.isEmpty()) {
-            throw new EmptySongListException("Cannot pause: Song list is empty");
-        }
-
+    public void pause() {
+        requireMediaLoaded("pause");
         mediaPlayer.pause();
     }
 
-    public void skip() throws EmptySongListException {
-        if (mediaPlayer == null) {
-            throw new MediaPlayerException("Cannot skip: No media loaded");
-        }
-
-        if (songs.isEmpty()) {
-            throw new EmptySongListException("Cannot skip: Song list is empty");
-        }
+    public void skip() {
+        requireMediaLoaded("skip");
 
         musicIndex = (musicIndex + 1) % songs.size();
         playSong(musicIndex);
     }
 
-    public void stop() throws EmptySongListException {
-        if (mediaPlayer == null) {
-            throw new MediaPlayerException("Cannot stop: No media loaded");
-        }
-
-        if (songs.isEmpty()) {
-            throw new EmptySongListException("Cannot stop: Song list is empty");
-        }
-
+    public void stop() {
+        requireMediaLoaded("stop");
         mediaPlayer.stop();
 //        mediaPlayer.dispose();
 
@@ -84,6 +67,8 @@ public class MediaPlayerManager {
     public ObservableList<Song> getSongs() {
         return songs;
     }
+
+    /* ---------------- Properties ---------------- */
 
     public BooleanProperty playingProperty() {
         return playing;
@@ -105,17 +90,24 @@ public class MediaPlayerManager {
         return volume;
     }
 
-    private void playSong(int index) {
-        if (mediaPlayer != null) {
-            mediaPlayer.volumeProperty().unbind();
-            mediaPlayer.stop();
-            mediaPlayer.dispose();
-            mediaPlayer = null;
+    /* ---------------- Internals ---------------- */
+
+    private void requireMediaLoaded(String action) {
+        if (songs.isEmpty()) {
+            throw new EmptySongListException("Cannot " + action + ": Song list is empty");
         }
+        if (mediaPlayer == null) {
+            throw new MediaPlayerException("Cannot " + action + ": No media loaded");
+        }
+    }
+
+    private void playSong(int index) {
+        disposeCurrentPlayer();
 
         Song song = songs.get(index);
+
         try {
-            media = new Media(song.path().toUri().toString());
+            Media media = new Media(song.path().toUri().toString());
             mediaPlayer = new MediaPlayer(media);
 
             mediaPlayer.volumeProperty().bind(volume);
@@ -123,6 +115,20 @@ public class MediaPlayerManager {
             throw new MediaPlayerException("Invalid media file: " + song.path(), e);
         }
 
+        wirePlayerEvents();
+        mediaPlayer.play();
+    }
+
+    private void disposeCurrentPlayer() {
+        if (mediaPlayer != null) {
+            mediaPlayer.volumeProperty().unbind();
+            mediaPlayer.stop();
+            mediaPlayer.dispose();
+            mediaPlayer = null;
+        }
+    }
+
+    private void wirePlayerEvents() {
         mediaPlayer.setOnPaused(() -> playing.set(false));
         mediaPlayer.setOnPlaying(() -> playing.set(true));
         mediaPlayer.setOnStopped(() -> playing.set(false));
@@ -133,7 +139,5 @@ public class MediaPlayerManager {
         mediaPlayer.setOnError(() -> {
             throw new MediaPlayerException("Media error: " + mediaPlayer.getError().getMessage());
         });
-
-        mediaPlayer.play();
     }
 }
