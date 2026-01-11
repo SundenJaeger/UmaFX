@@ -1,12 +1,13 @@
 package com.rentoki.umafx.controller;
 
-import com.rentoki.umafx.MainApplication;
 import com.rentoki.umafx.dialog.SongQueueDialog;
 import com.rentoki.umafx.enums.ErrorHeaders;
+import com.rentoki.umafx.enums.PlaybackState;
 import com.rentoki.umafx.exceptions.InvalidCharacterFolderException;
 import com.rentoki.umafx.exceptions.PreferencesRepositoryException;
 import com.rentoki.umafx.manager.AnimationManager;
 import com.rentoki.umafx.manager.MediaPlayerManager;
+import com.rentoki.umafx.manager.TrayIconManager;
 import com.rentoki.umafx.model.Song;
 import com.rentoki.umafx.service.CharacterPropertiesService;
 import com.rentoki.umafx.service.WindowPreferencesService;
@@ -36,7 +37,7 @@ public class JukeboxController {
     private final WindowPreferencesService windowPreferencesService;
     private final CharacterPropertiesService characterPropertiesService;
     private final MediaPlayerManager mediaPlayerManager;
-    private final MainApplication mainApplication;
+    private final TrayIconManager trayIconManager;
 
     private final AnimationManager animationManager = new AnimationManager();
     private final StringProperty characterName = new SimpleStringProperty();
@@ -61,11 +62,11 @@ public class JukeboxController {
     @FXML
     private Label volumeLabel;
 
-    public JukeboxController(WindowPreferencesService windowPreferencesService, CharacterPropertiesService characterPropertiesService, MediaPlayerManager mediaPlayerManager, MainApplication mainApplication) {
+    public JukeboxController(WindowPreferencesService windowPreferencesService, CharacterPropertiesService characterPropertiesService, MediaPlayerManager mediaPlayerManager, TrayIconManager trayIconManager) {
         this.windowPreferencesService = windowPreferencesService;
         this.characterPropertiesService = characterPropertiesService;
         this.mediaPlayerManager = mediaPlayerManager;
-        this.mainApplication = mainApplication;
+        this.trayIconManager = trayIconManager;
     }
 
     @FXML
@@ -73,11 +74,11 @@ public class JukeboxController {
         characterNameProperty().bind(characterPropertiesService.characterProperty());
         characterName.addListener((observable, oldValue, newValue) -> {
             if (newValue != null && !newValue.trim().isEmpty()) {
-                boolean wasPlaying = mediaPlayerManager.isPlaying();
+                boolean isPlaying = mediaPlayerManager.getState() == PlaybackState.PLAYING;
 
                 animationManager.loadAnimation(newValue, spriteImageView);
 
-                if (wasPlaying) {
+                if (isPlaying) {
                     animationManager.playAnimation("ready", spriteImageView, () -> animationManager.playRandomVariant("dance", spriteImageView, null));
                 } else {
                     animationManager.playAnimation("idle", spriteImageView, null);
@@ -85,11 +86,11 @@ public class JukeboxController {
             }
         });
 
-        mediaPlayerManager.playingProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                animationManager.playAnimation("ready", spriteImageView, () -> animationManager.playRandomVariant("dance", spriteImageView, null));
-            } else {
-                animationManager.playAnimation("idle", spriteImageView, null);
+        mediaPlayerManager.stateProperty().addListener((observable, oldValue, newValue) -> {
+            switch (newValue) {
+                case PLAYING -> animationManager.playAnimation("ready", spriteImageView,
+                        () -> animationManager.playRandomVariant("dance", spriteImageView, null));
+                case PAUSED, STOPPED, EMPTY -> animationManager.playAnimation("idle", spriteImageView, null);
             }
         });
 
@@ -212,10 +213,10 @@ public class JukeboxController {
         final ContextMenu jukeboxContextMenu = new ContextMenuBuilder()
                 .addMenuItem("Open Song Queue", this::openSongQueue)
                 .addSeparator()
-                .addMenuItem(mainApplication.playPauseItem())
-                .addMenuItem(mainApplication.stopItem())
-                .addMenuItem(mainApplication.skipItem())
-                .addMenuItem(mainApplication.volumeItem())
+                .addMenuItem(trayIconManager.playPauseItem())
+                .addMenuItem(trayIconManager.stopItem())
+                .addMenuItem(trayIconManager.skipItem())
+                .addMenuItem(trayIconManager.volumeItem())
                 .addSeparator()
                 .addMenuItem("Exit", () -> {
                     Platform.setImplicitExit(true);
@@ -225,7 +226,7 @@ public class JukeboxController {
                 .build();
 
         jukeboxImageView.setOnContextMenuRequested(event -> jukeboxContextMenu.show(jukeboxImageView, event.getScreenX(), event.getScreenY()));
-        volumeContainer.visibleProperty().bind(mainApplication.volumeVisibleProperty());
+        volumeContainer.visibleProperty().bind(trayIconManager.volumeVisibleProperty());
     }
 
 
