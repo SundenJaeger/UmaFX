@@ -15,13 +15,17 @@ public enum MediaResources {
         this.imagePath = imagePath;
     }
 
-    public URL getURL(Class<?> clazz) {
-        return clazz.getResource(imagePath);
+    public URL getURL() {
+        return MediaResources.class.getResource(imagePath);
     }
 
-    public Image getImage(Class<?> clazz) throws MediaResourcesException {
+    public Image getImage() throws MediaResourcesException {
         try {
-            return new Image(getURL(clazz).openStream());
+            URL url = getURL();
+            if (url == null) {
+                throw new MediaResourcesException("Resource not found: " + imagePath);
+            }
+            return new Image(url.openStream());
         } catch (IOException e) {
             throw new MediaResourcesException("Cannot load image: " + e.getMessage(), e);
         }
