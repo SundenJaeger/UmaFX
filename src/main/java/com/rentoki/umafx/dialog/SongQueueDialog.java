@@ -36,7 +36,7 @@ public class SongQueueDialog extends Dialog<ObservableList<Song>> {
         stage.setAlwaysOnTop(true);
 
         try {
-            stage.getIcons().add(MediaResources.APP_ICON.getImage(SongQueueDialog.class));
+            stage.getIcons().add(MediaResources.APP_ICON.getImage());
         } catch (MediaResourcesException e) {
             stage.getIcons().clear();
         }
