@@ -3,7 +3,7 @@ module com.rentoki.umafx {
     requires javafx.fxml;
     requires java.prefs;
     requires com.fasterxml.jackson.annotation;
-    requires com.fasterxml.jackson.databind;
+    requires tools.jackson.databind;
     requires javafx.media;
     requires javafx.base;
     requires com.dustinredmond.fxtrayicon;

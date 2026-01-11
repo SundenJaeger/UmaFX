@@ -25,27 +25,27 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>25</version>
+            <version>25.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>25</version>
+            <version>25.0.1</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
+            <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.20.0</version>
+            <version>3.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-media</artifactId>
-            <version>25</version>
+            <version>25.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
-            <version>25</version>
+            <version>25.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.dustinredmond</groupId>
@@ -73,8 +73,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>24</source>
-                    <target>24</target>
+                    <source>25</source>
+                    <target>25</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -87,9 +87,18 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>com.rentoki.umafx.Launcher</mainClass>
-                            <launcher>app</launcher>
-                            <jlinkZipName>app</jlinkZipName>
-                            <jlinkImageName>app</jlinkImageName>
+
+                            <jvmArgs>
+                                <jvmArg>--enable-native-access=javafx.graphics,javafx.media</jvmArg>
+                            </jvmArgs>
+
+                            <launcherArgs>
+                                <launcherArg>--enable-native-access=javafx.graphics,javafx.media</launcherArg>
+                            </launcherArgs>
+
+                            <launcher>UmaFX</launcher>
+                            <jlinkZipName>UmaFX</jlinkZipName>
+                            <jlinkImageName>UmaFX</jlinkImageName>
                             <noManPages>true</noManPages>
                             <stripDebug>true</stripDebug>
                             <noHeaderFiles>true</noHeaderFiles>

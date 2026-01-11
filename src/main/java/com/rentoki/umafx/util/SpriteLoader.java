@@ -1,9 +1,9 @@
 package com.rentoki.umafx.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rentoki.umafx.model.SpriteSheet;
 import com.rentoki.umafx.model.SpriteSheetConfig;
 import javafx.scene.image.Image;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.nio.file.Files;

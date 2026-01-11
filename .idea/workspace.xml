@@ -4,22 +4,51 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="16ced5a9-dbc8-4a57-b54f-d791bdd5b2d1" name="Changes" comment="" />
+    <list default="true" id="16ced5a9-dbc8-4a57-b54f-d791bdd5b2d1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/rentoki/umafx/MainApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/rentoki/umafx/MainApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/rentoki/umafx/controller/JukeboxController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/rentoki/umafx/controller/JukeboxController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/rentoki/umafx/dialog/SongQueueDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/rentoki/umafx/dialog/SongQueueDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/rentoki/umafx/enums/MediaResources.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/rentoki/umafx/enums/MediaResources.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/rentoki/umafx/manager/MediaPlayerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/rentoki/umafx/manager/MediaPlayerManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/rentoki/umafx/util/SpriteLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/rentoki/umafx/util/SpriteLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="56" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Interface" />
-        <option value="Class" />
         <option value="Exception" />
+        <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;SundenJaeger&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:SundenJaeger/UmaFX.git&quot;,
+    &quot;accountId&quot;: &quot;bff86b85-1751-43c4-952e-3369e6184651&quot;
+  }
+}</component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -27,9 +56,13 @@
       </MavenGeneralSettings>
     </option>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="32BgWPwTyWNlH0OHEfVEvZgezSO" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -39,9 +72,18 @@
   "keyToString": {
     "Application.HelloApplication.executor": "Run",
     "Application.MainApplication.executor": "Run",
+    "Maven.UmaFX [org.openjfx:javafx-maven-plugin:0.0.8:run].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "dev",
     "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/Documents/Java/Projects/UmaFX/src/main/resources/com/rentoki/umafx/spritesheets/teio",
     "node.js.detected.package.eslint": "true",
@@ -49,7 +91,11 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "copyright",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "configurable.group.build",
+    "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -84,8 +130,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.25557.131" />
-        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-IU-252.25557.131" />
+        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.138" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.29346.138" />
       </set>
     </attachedChunks>
   </component>
@@ -97,10 +143,29 @@
       <option name="presentableId" value="Default" />
       <updated>1756899415808</updated>
       <workItem from="1756899417375" duration="17026000" />
+      <workItem from="1760169616509" duration="997000" />
+      <workItem from="1760170668314" duration="204000" />
+      <workItem from="1760325884803" duration="360000" />
+      <workItem from="1760933082942" duration="170000" />
+      <workItem from="1761617011989" duration="11000" />
+      <workItem from="1761715044587" duration="154000" />
+      <workItem from="1762237050633" duration="219000" />
+      <workItem from="1768015939646" duration="633000" />
+      <workItem from="1768016778826" duration="112000" />
+      <workItem from="1768036029065" duration="317000" />
+      <workItem from="1768121510263" duration="12820000" />
+      <workItem from="1768135879470" duration="8017000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Refactor `MediaPlayerManager` for cleaner media handling and improve exception hierarchy by making `EmptySongListException` extend `RuntimeException`." />
+    <MESSAGE value="Refactor MediaPlayerManager: improve exception handling and simplify media player management" />
+    <MESSAGE value="Change EmptySongListException to extend RuntimeException" />
+    <MESSAGE value="Update LICENSE copyright year to include 2026" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update LICENSE copyright year to include 2026" />
   </component>
 </project>
