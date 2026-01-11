@@ -27,6 +27,8 @@ public class AnimationManager {
         this.spriteLoader = new SpriteLoader();
     }
 
+    /* ---------------- Public API ---------------- */
+
     public void loadAnimation(String characterFolder, ImageView imageView) {
         spriteSheetMap.clear();
         try {
@@ -44,22 +46,29 @@ public class AnimationManager {
 
     public void playAnimation(String name, ImageView imageView, Runnable onAnimationComplete) {
         stopAnimation();
+
         this.onAnimationComplete = onAnimationComplete;
         currentSheet = spriteSheetMap.get(name);
+        currentFrame = 0;
 
         if (currentSheet == null) {
             return;
         }
 
-        currentFrame = 0;
         imageView.setImage(currentSheet.image);
+        updateFrame(imageView);
+
         startAnimation(imageView, currentSheet.loop);
     }
 
     public void stopAnimation() {
         if (animationTimeline != null) {
             animationTimeline.stop();
+            animationTimeline = null;
         }
+        currentSheet = null;
+        onAnimationComplete = null;
+        currentFrame = 0;
     }
 
     public List<String> getAnimationVariants(String baseName) {
@@ -67,7 +76,6 @@ public class AnimationManager {
                 .filter(name -> name.startsWith(baseName + "_"))
                 .collect(Collectors.toList());
     }
-
 
     public void playRandomVariant(String baseName, ImageView imageView, Runnable onAnimationComplete) {
         List<String> variants = getAnimationVariants(baseName);
@@ -79,6 +87,8 @@ public class AnimationManager {
         String randomVariant = variants.get((int) (Math.random() * variants.size()));
         playAnimation(randomVariant, imageView, onAnimationComplete);
     }
+
+    /* ---------------- Helpers ---------------- */
 
     private void startAnimation(ImageView imageView, boolean loop) {
         if (animationTimeline != null) {
@@ -106,6 +116,10 @@ public class AnimationManager {
     }
 
     private void updateFrame(ImageView imageView) {
+        if (currentSheet == null || currentFrame >= currentSheet.totalFrames) {
+            return;
+        }
+
         int column = currentFrame % currentSheet.columns;
         int row = currentFrame / currentSheet.columns;
 
