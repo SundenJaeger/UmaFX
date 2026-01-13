@@ -17,6 +17,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -49,6 +50,7 @@ public class MainApplication extends Application {
         configureStage(stage, scene);
         restoreWindowPosition(stage);
         setupShutdown(stage);
+        loadFont();
     }
 
     /* ---------------- Helpers ---------------- */
@@ -120,5 +122,10 @@ public class MainApplication extends Application {
             Platform.exit();
             System.exit(0);
         });
+    }
+
+    private void loadFont() {
+        Font font = Font.loadFont(MainApplication.class.getResourceAsStream("fonts/AtlanSemiBold.otf"), 0);
+        System.out.println(font.getFamily());
     }
 }
