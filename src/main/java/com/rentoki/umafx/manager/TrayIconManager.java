@@ -20,15 +20,15 @@ public class TrayIconManager {
 
     private final Stage stage;
     private final MediaPlayerManager mediaPlayerManager;
-    private final Runnable openSongQueue;
+    private final Runnable openTrackQueue;
     private final WindowPositionSaver windowPositionSaver;
 
     private final BooleanProperty volumeVisible = new SimpleBooleanProperty(false);
 
-    public TrayIconManager(Stage stage, MediaPlayerManager mediaPlayerManager, Runnable openSongQueue, WindowPositionSaver windowPositionSaver) {
+    public TrayIconManager(Stage stage, MediaPlayerManager mediaPlayerManager, Runnable openTrackQueue, WindowPositionSaver windowPositionSaver) {
         this.stage = stage;
         this.mediaPlayerManager = mediaPlayerManager;
-        this.openSongQueue = openSongQueue;
+        this.openTrackQueue = openTrackQueue;
         this.windowPositionSaver = windowPositionSaver;
     }
 
@@ -132,7 +132,7 @@ public class TrayIconManager {
         fxTrayIcon.addMenuItem("Reset Window", event -> resetWindow());
 
         fxTrayIcon.insertSeparator(1);
-        fxTrayIcon.addMenuItem("Open Song Queue", event -> openSongQueue.run());
+        fxTrayIcon.addMenuItem("Open Track Queue", event -> openTrackQueue.run());
 
         fxTrayIcon.addSeparator();
         fxTrayIcon.addMenuItem(playPauseItem());
@@ -150,7 +150,7 @@ public class TrayIconManager {
         } catch (EmptySongListException e) {
             ShowAlert.error().text("Error", e.getMessage())
                     .showAndWait()
-                    .ifPresent(buttonType -> openSongQueue.run());
+                    .ifPresent(buttonType -> openTrackQueue.run());
         } catch (MediaPlayerException e) {
             ShowAlert.showError(e.getMessage());
         }

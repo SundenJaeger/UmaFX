@@ -211,7 +211,7 @@ public class JukeboxController {
 
     private void setupJukeboxContextMenu() {
         final ContextMenu jukeboxContextMenu = new ContextMenuBuilder()
-                .addMenuItem("Open Song Queue", this::openTrackQueue)
+                .addMenuItem("Open Track Queue", this::openTrackQueue)
                 .addSeparator()
                 .addMenuItem(trayIconManager.playPauseItem())
                 .addMenuItem(trayIconManager.stopItem())
