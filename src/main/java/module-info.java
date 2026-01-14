@@ -8,6 +8,9 @@ module com.rentoki.umafx {
     requires javafx.base;
     requires com.dustinredmond.fxtrayicon;
 
+    requires jaudiotagger;
+    requires javafx.swing;
+    requires net.coobird.thumbnailator;
 
     opens com.rentoki.umafx to javafx.fxml;
     exports com.rentoki.umafx;

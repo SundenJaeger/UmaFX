@@ -48,6 +48,16 @@
             <version>25.0.1</version>
         </dependency>
         <dependency>
+            <groupId>net.jthink</groupId>
+            <artifactId>jaudiotagger</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>0.4.21</version>
+        </dependency>
+        <dependency>
             <groupId>com.dustinredmond</groupId>
             <artifactId>fxtrayicon</artifactId>
             <version>4.2.4</version>
