@@ -8,23 +8,17 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rentoki.umafx.controller.JukeboxController">
-   <children>
-      <VBox fx:id="volumeContainer" alignment="CENTER" layoutX="22.0" layoutY="94.0" prefWidth="34.0">
-         <children>
-            <Label fx:id="volumeLabel" text="0" textFill="WHITE">
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </Label>
-            <Slider fx:id="volumeSlider" orientation="VERTICAL" prefHeight="95.0" prefWidth="14.0" />
-         </children>
-      </VBox>
-      <ImageView fx:id="spriteImageView" cache="true" cacheHint="SPEED" fitHeight="150.0" fitWidth="200.0" layoutX="86.0" layoutY="75.0" onMouseClicked="#spriteClicked" onMouseDragged="#spriteDragged" onMousePressed="#spritePressed" onMouseReleased="#spriteReleased" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="jukeboxImageView" fitHeight="82.0" fitWidth="72.0" layoutX="50.0" layoutY="129.0" onMouseClicked="#playJukebox" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../media/temp.png" />
-         </image>
-      </ImageView>
-   </children>
+<AnchorPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rentoki.umafx.controller.JukeboxController">
+   <VBox fx:id="volumeContainer" alignment="CENTER" layoutX="22.0" layoutY="94.0" prefWidth="34.0">
+      <Label fx:id="volumeLabel" text="0" textFill="WHITE">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </Label>
+      <Slider fx:id="volumeSlider" orientation="VERTICAL" prefHeight="95.0" prefWidth="14.0" />
+   </VBox>
+   <ImageView fx:id="spriteImageView" cache="true" cacheHint="SPEED" fitHeight="150.0" fitWidth="200.0" layoutX="86.0" layoutY="75.0" onMouseClicked="#spriteClicked" onMouseDragged="#spriteDragged" onMousePressed="#spritePressed" onMouseReleased="#spriteReleased" pickOnBounds="true" preserveRatio="true" />
+   <ImageView fx:id="jukeboxImageView" fitHeight="82.0" fitWidth="72.0" layoutX="50.0" layoutY="129.0" onMouseClicked="#playJukebox" pickOnBounds="true" preserveRatio="true">
+      <Image url="@../media/temp.png" />
+   </ImageView>
 </AnchorPane>
