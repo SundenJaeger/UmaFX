@@ -3,8 +3,8 @@
     -fx-text-fill: #753e0f;
 }
 
-#trackLabel {
-    -fx-font-size: 20px;
+#trackTitleLabel {
+    -fx-font-size: 16px;
 }
 
 #requesterLabel {
