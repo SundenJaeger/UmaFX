@@ -1,0 +1,27 @@
+* {
+    -fx-font-family: "Atlan Semi Bold";
+}
+
+.header-banner-large {
+    -fx-background-color: #84cf08;
+    -fx-background-radius: 20px;
+}
+
+.header-banner-small {
+    -fx-background-color: #84cf08;
+}
+
+#headerBannerLargeLabel {
+    -fx-font-size: 30px;
+    -fx-text-fill: white;
+}
+
+#trackNameLabel {
+    -fx-font-size: 20px;
+    -fx-text-fill: white;
+}
+
+.artistLabel .label, .albumLabel .label, .yearLabel .label {
+    -fx-font-size: 15px;
+    -fx-text-fill: white;
+}

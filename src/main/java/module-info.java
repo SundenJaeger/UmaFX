@@ -7,7 +7,8 @@ module com.rentoki.umafx {
     requires javafx.media;
     requires javafx.base;
     requires com.dustinredmond.fxtrayicon;
-
+    requires org.kordamp.ikonli.javafx;
+    requires org.kordamp.ikonli.materialdesign2;
     requires jaudiotagger;
     requires javafx.swing;
     requires net.coobird.thumbnailator;
