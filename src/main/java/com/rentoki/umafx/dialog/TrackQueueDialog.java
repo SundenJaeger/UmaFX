@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class SongQueueDialog extends Dialog<ObservableList<Track>> {
+public class TrackQueueDialog extends Dialog<ObservableList<Track>> {
     private static final String DIALOG_TITLE = "Song Queue";
 
     private static final ButtonType SAVE_BUTTON_TYPE = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
@@ -26,7 +26,7 @@ public class SongQueueDialog extends Dialog<ObservableList<Track>> {
     private TrackQueueController trackQueueController;
     private Parent songQueueNode;
 
-    public SongQueueDialog() {
+    public TrackQueueDialog() {
         setTitle(DIALOG_TITLE);
         setHeaderText(null);
 
@@ -64,7 +64,7 @@ public class SongQueueDialog extends Dialog<ObservableList<Track>> {
     private Parent loadSongQueueView() {
         if (songQueueNode == null) {
             try {
-                FXMLLoader loader = new FXMLLoader(SongQueueDialog.class.getResource(View.SONG_QUEUE.getFxmlPath()));
+                FXMLLoader loader = new FXMLLoader(TrackQueueDialog.class.getResource(View.SONG_QUEUE.getFxmlPath()));
                 songQueueNode = loader.load();
                 trackQueueController = loader.getController();
 

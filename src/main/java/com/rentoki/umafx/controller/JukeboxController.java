@@ -1,6 +1,6 @@
 package com.rentoki.umafx.controller;
 
-import com.rentoki.umafx.dialog.SongQueueDialog;
+import com.rentoki.umafx.dialog.TrackQueueDialog;
 import com.rentoki.umafx.enums.ErrorHeaders;
 import com.rentoki.umafx.enums.PlaybackState;
 import com.rentoki.umafx.exceptions.InvalidCharacterFolderException;
@@ -42,7 +42,7 @@ public class JukeboxController {
     private final AnimationManager animationManager = new AnimationManager();
     private final StringProperty characterName = new SimpleStringProperty();
 
-    private SongQueueDialog songQueueDialog;
+    private TrackQueueDialog trackQueueDialog;
 
     private double xOffset;
     private double yOffset;
@@ -122,7 +122,7 @@ public class JukeboxController {
     @FXML
     private void playJukebox(MouseEvent event) {
         if (event.getButton() == MouseButton.PRIMARY) {
-            openSongQueue();
+            openTrackQueue();
         }
     }
 
@@ -193,15 +193,15 @@ public class JukeboxController {
         return volumeContainer;
     }
 
-    public void openSongQueue() {
-        if (songQueueDialog == null) {
-            songQueueDialog = new SongQueueDialog();
+    public void openTrackQueue() {
+        if (trackQueueDialog == null) {
+            trackQueueDialog = new TrackQueueDialog();
         }
 
-        songQueueDialog.removeAllSong();
-        songQueueDialog.setSongs(mediaPlayerManager.getSongs());
+        trackQueueDialog.removeAllSong();
+        trackQueueDialog.setSongs(mediaPlayerManager.getSongs());
 
-        Optional<ObservableList<Track>> result = songQueueDialog.showAndWait();
+        Optional<ObservableList<Track>> result = trackQueueDialog.showAndWait();
 
         result.ifPresent(songs -> {
             List<Path> paths = songs.stream().map(Track::getPath).toList();
@@ -211,7 +211,7 @@ public class JukeboxController {
 
     private void setupJukeboxContextMenu() {
         final ContextMenu jukeboxContextMenu = new ContextMenuBuilder()
-                .addMenuItem("Open Song Queue", this::openSongQueue)
+                .addMenuItem("Open Song Queue", this::openTrackQueue)
                 .addSeparator()
                 .addMenuItem(trayIconManager.playPauseItem())
                 .addMenuItem(trayIconManager.stopItem())

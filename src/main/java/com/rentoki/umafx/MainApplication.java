@@ -56,7 +56,7 @@ public class MainApplication extends Application {
     /* ---------------- Helpers ---------------- */
 
     private void initializeTray(Stage stage) {
-        trayIconManager = new TrayIconManager(stage, mediaPlayerManager, () -> jukeboxController.openSongQueue(), windowPreferencesService::savePos);
+        trayIconManager = new TrayIconManager(stage, mediaPlayerManager, () -> jukeboxController.openTrackQueue(), windowPreferencesService::savePos);
         trayIconManager.show();
     }
 
