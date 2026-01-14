@@ -8,7 +8,8 @@
 }
 
 .header-banner-small {
-    -fx-background-color: #84cf08;
+    -fx-shape: "M 0 0 L 380 0 L 370 20 L 0 20 Z";
+    -fx-background-color: linear-gradient(to right, #84cf08, #78c909);
 }
 
 #headerBannerLargeLabel {
@@ -24,4 +25,10 @@
 .artistLabel .label, .albumLabel .label, .yearLabel .label {
     -fx-font-size: 15px;
     -fx-text-fill: white;
+}
+
+.metadata-banner {
+    -fx-background-image: url("../media/metadata-banner.png");
+    -fx-background-position: center;
+    -fx-background-size: cover;
 }

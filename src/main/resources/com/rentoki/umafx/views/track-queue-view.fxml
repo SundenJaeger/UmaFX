@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
@@ -35,11 +36,12 @@
                        <BorderPane.margin>
                            <Insets top="10.0" />
                        </BorderPane.margin>
-                       <StackPane alignment="CENTER_LEFT" style="-fx-background-color: #84cf08;" styleClass="header-banner-small" GridPane.columnSpan="2147483647">
+                       <StackPane alignment="CENTER_LEFT" styleClass="header-banner-small" GridPane.columnSpan="2147483647">
                            <padding>
-                               <Insets bottom="3.0" left="5.0" />
+                               <Insets bottom="1.0" left="5.0" />
                            </padding>
-                           <Label text="Actions" textFill="WHITE" />
+                           <Label text="Actions" textFill="WHITE" StackPane.alignment="TOP_LEFT" />
+                        <Line endX="390.0" managed="" startX="379.0" startY="17.0" stroke="WHITE" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeWidth="2.0" translateX="20.0" StackPane.alignment="TOP_RIGHT" />
                        </StackPane>
                        <Button mnemonicParsing="false" onAction="#addFolder" prefWidth="106.4" text="Add Folder" GridPane.rowIndex="1" />
                        <Button mnemonicParsing="false" onAction="#addSong" prefWidth="106.4" text="Add Song" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -57,7 +59,7 @@
             </BorderPane>
          </center>
          <top>
-             <GridPane hgap="10.0" maxWidth="-Infinity" prefWidth="440.0" style="-fx-background-color: blue;" BorderPane.alignment="CENTER">
+             <GridPane hgap="10.0" maxWidth="-Infinity" prefWidth="440.0" styleClass="metadata-banner" BorderPane.alignment="CENTER">
                  <columnConstraints>
                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" />
                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -81,27 +83,26 @@
                  <HBox spacing="5.0" styleClass="artistLabel" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <Label text="Artist:" textFill="WHITE">
                          <font>
-                             <Font size="15.0"/>
+                             <Font size="15.0" />
                          </font>
                      </Label>
-                     <Label fx:id="artistLabel" text="Unknown Artist"/>
+                     <Label fx:id="artistLabel" text="Unknown Artist" />
                  </HBox>
                  <HBox spacing="5.0" styleClass="albumLabel" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <Label styleClass="albumLabel" text="Album:" textFill="WHITE">
                          <font>
-                             <Font size="15.0"/>
+                             <Font size="15.0" />
                          </font>
                      </Label>
-                     <Label fx:id="albumLabel" text="Unknown Album"/>
+                     <Label fx:id="albumLabel" text="Unknown Album" />
                  </HBox>
-                 <HBox spacing="5.0" styleClass="yearLabel" GridPane.columnIndex="1" GridPane.rowIndex="4"
-                       GridPane.valignment="TOP">
+                 <HBox spacing="5.0" styleClass="yearLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="TOP">
                      <Label text="Year:" textFill="WHITE">
                          <font>
-                             <Font size="15.0"/>
+                             <Font size="15.0" />
                          </font>
                      </Label>
-                     <Label fx:id="yearLabel" text="Unknown Year"/>
+                     <Label fx:id="yearLabel" text="Unknown Year" />
                  </HBox>
                  <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                  <ImageView fx:id="albumCover" cache="true" cacheHint="SPEED" fitHeight="110.0" fitWidth="110.0" pickOnBounds="true" GridPane.rowSpan="5">
