@@ -64,7 +64,7 @@ public class TrackQueueDialog extends Dialog<ObservableList<Track>> {
     private Parent loadSongQueueView() {
         if (songQueueNode == null) {
             try {
-                FXMLLoader loader = new FXMLLoader(TrackQueueDialog.class.getResource(View.SONG_QUEUE.getFxmlPath()));
+                FXMLLoader loader = new FXMLLoader(TrackQueueDialog.class.getResource(View.TRACK_QUEUE.getFxmlPath()));
                 songQueueNode = loader.load();
                 trackQueueController = loader.getController();
 
