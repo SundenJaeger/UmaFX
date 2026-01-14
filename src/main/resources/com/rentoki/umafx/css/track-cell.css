@@ -1,0 +1,21 @@
+* {
+    -fx-font-family: "Atlan Semi Bold";
+    -fx-text-fill: #753e0f;
+}
+
+#trackLabel {
+    -fx-font-size: 20px;
+}
+
+#requesterLabel {
+    -fx-font-size: 15px;
+}
+
+#requestDateContainer {
+    -fx-background-color: #ece7e4;
+    -fx-background-radius: 10px;
+}
+
+#timePassedLabel, #requestDateLabel {
+    -fx-font-size: 13px;
+}
