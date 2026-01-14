@@ -1,10 +1,10 @@
 package com.rentoki.umafx.dialog;
 
-import com.rentoki.umafx.controller.SongQueueController;
+import com.rentoki.umafx.controller.TrackQueueController;
 import com.rentoki.umafx.enums.MediaResources;
 import com.rentoki.umafx.enums.View;
 import com.rentoki.umafx.exceptions.MediaResourcesException;
-import com.rentoki.umafx.model.Song;
+import com.rentoki.umafx.model.Track;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -17,13 +17,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class SongQueueDialog extends Dialog<ObservableList<Song>> {
+public class SongQueueDialog extends Dialog<ObservableList<Track>> {
     private static final String DIALOG_TITLE = "Song Queue";
 
     private static final ButtonType SAVE_BUTTON_TYPE = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
     private static final ButtonType CANCEL_BUTTON_TYPE = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-    private SongQueueController songQueueController;
+    private TrackQueueController trackQueueController;
     private Parent songQueueNode;
 
     public SongQueueDialog() {
@@ -43,22 +43,22 @@ public class SongQueueDialog extends Dialog<ObservableList<Song>> {
 
         dialogPane.setContent(loadSongQueueView());
         dialogPane.getButtonTypes().addAll(SAVE_BUTTON_TYPE, CANCEL_BUTTON_TYPE);
-        dialogPane.lookupButton(SAVE_BUTTON_TYPE).disableProperty().bind(Bindings.size(songQueueController.getSongs()).lessThanOrEqualTo(0));
+        dialogPane.lookupButton(SAVE_BUTTON_TYPE).disableProperty().bind(Bindings.size(trackQueueController.getSongs()).lessThanOrEqualTo(0));
 
         setResultConverter(param -> {
             if (param == SAVE_BUTTON_TYPE) {
-                return songQueueController.getSongs();
+                return trackQueueController.getSongs();
             }
             return null;
         });
     }
 
     public void removeAllSong() {
-        songQueueController.removeAllSong();
+        trackQueueController.removeAllSong();
     }
 
-    public void setSongs(ObservableList<Song> songs) {
-        songQueueController.setSongs(songs);
+    public void setSongs(ObservableList<Track> tracks) {
+        trackQueueController.setSongs(tracks);
     }
 
     private Parent loadSongQueueView() {
@@ -66,7 +66,7 @@ public class SongQueueDialog extends Dialog<ObservableList<Song>> {
             try {
                 FXMLLoader loader = new FXMLLoader(SongQueueDialog.class.getResource(View.SONG_QUEUE.getFxmlPath()));
                 songQueueNode = loader.load();
-                songQueueController = loader.getController();
+                trackQueueController = loader.getController();
 
                 return songQueueNode;
             } catch (IOException e) {
