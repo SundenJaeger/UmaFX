@@ -3,7 +3,7 @@ package com.rentoki.umafx.manager;
 import com.rentoki.umafx.enums.PlaybackState;
 import com.rentoki.umafx.exceptions.EmptySongListException;
 import com.rentoki.umafx.exceptions.MediaPlayerException;
-import com.rentoki.umafx.model.Song;
+import com.rentoki.umafx.model.Track;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
@@ -18,7 +18,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class MediaPlayerManager {
-    private final ObservableList<Song> songs = FXCollections.observableArrayList();
+    private final ObservableList<Track> tracks = FXCollections.observableArrayList();
 
     private MediaPlayer mediaPlayer;
     private int musicIndex;
@@ -28,10 +28,10 @@ public class MediaPlayerManager {
     private final BooleanProperty mediaLoaded = new SimpleBooleanProperty(false);
 
     public MediaPlayerManager() {
-        songs.addListener((ListChangeListener<Song>) c -> {
-            if (!songs.isEmpty() && state.get() == PlaybackState.EMPTY) {
+        tracks.addListener((ListChangeListener<Track>) c -> {
+            if (!tracks.isEmpty() && state.get() == PlaybackState.EMPTY) {
                 state.set(PlaybackState.STOPPED);
-            } else if (songs.isEmpty()) {
+            } else if (tracks.isEmpty()) {
                 disposeCurrentPlayer();
             }
         });
@@ -40,7 +40,7 @@ public class MediaPlayerManager {
     /* ---------------- Public API ---------------- */
 
     public void play() {
-        if (songs.isEmpty()) {
+        if (tracks.isEmpty()) {
             throw new EmptySongListException("Cannot play: Song list is empty");
         }
 
@@ -69,7 +69,7 @@ public class MediaPlayerManager {
     public void skip() {
         requireMediaLoaded("skip");
 
-        musicIndex = (musicIndex + 1) % songs.size();
+        musicIndex = (musicIndex + 1) % tracks.size();
         playSong(musicIndex);
     }
 
@@ -82,7 +82,7 @@ public class MediaPlayerManager {
     }
 
     public void addSong(List<Path> paths) {
-        songs.setAll(paths.stream().map(Song::new).toList());
+        tracks.setAll(paths.stream().map(Track::new).toList());
     }
 
     /* ---------------- Properties ---------------- */
@@ -96,20 +96,20 @@ public class MediaPlayerManager {
     }
 
     public BooleanBinding playProperty() {
-        return Bindings.createBooleanBinding(() -> (state.get() == PlaybackState.STOPPED || state.get() == PlaybackState.PAUSED) && !songs.isEmpty(), state, songs);
+        return Bindings.createBooleanBinding(() -> (state.get() == PlaybackState.STOPPED || state.get() == PlaybackState.PAUSED) && !tracks.isEmpty(), state, tracks);
     }
 
     public BooleanBinding pauseProperty() {
-        return Bindings.createBooleanBinding(() -> state.get() == PlaybackState.PLAYING && mediaLoaded.get() && !songs.isEmpty(), state, songs, mediaLoaded);
+        return Bindings.createBooleanBinding(() -> state.get() == PlaybackState.PLAYING && mediaLoaded.get() && !tracks.isEmpty(), state, tracks, mediaLoaded);
     }
 
     public BooleanBinding stopProperty() {
-        return Bindings.createBooleanBinding(() -> (state.get() == PlaybackState.PLAYING || state.get() == PlaybackState.PAUSED) && mediaLoaded.get() && !songs.isEmpty(), state, mediaLoaded, songs);
+        return Bindings.createBooleanBinding(() -> (state.get() == PlaybackState.PLAYING || state.get() == PlaybackState.PAUSED) && mediaLoaded.get() && !tracks.isEmpty(), state, mediaLoaded, tracks);
     }
 
 
     public BooleanBinding skipProperty() {
-        return Bindings.createBooleanBinding(() -> (state.get() == PlaybackState.PLAYING || state.get() == PlaybackState.PAUSED || state.get() == PlaybackState.STOPPED) && mediaLoaded.get() && songs.size() > 1, mediaLoaded, songs, state);
+        return Bindings.createBooleanBinding(() -> (state.get() == PlaybackState.PLAYING || state.get() == PlaybackState.PAUSED || state.get() == PlaybackState.STOPPED) && mediaLoaded.get() && tracks.size() > 1, mediaLoaded, tracks, state);
     }
 
     /* ---------------- Getters/Setters ---------------- */
@@ -126,14 +126,14 @@ public class MediaPlayerManager {
         return state.get();
     }
 
-    public ObservableList<Song> getSongs() {
-        return songs;
+    public ObservableList<Track> getSongs() {
+        return tracks;
     }
 
     /* ---------------- Internals ---------------- */
 
     private void requireMediaLoaded(String action) {
-        if (songs.isEmpty()) {
+        if (tracks.isEmpty()) {
             throw new EmptySongListException("Cannot " + action + ": Song list is empty");
         }
         if (mediaPlayer == null) {
@@ -144,23 +144,23 @@ public class MediaPlayerManager {
     private void playSong(int index) {
         disposeCurrentPlayer();
 
-        Song song = songs.get(index);
+        Track track = tracks.get(index);
 
         try {
-            Media media = new Media(song.path().toUri().toString());
+            Media media = new Media(track.getPath().toUri().toString());
             mediaPlayer = new MediaPlayer(media);
             mediaPlayer.volumeProperty().bind(volume);
             mediaLoaded.set(true);
         } catch (MediaException e) {
             mediaLoaded.set(false);
-            throw new MediaPlayerException("Invalid media file: " + song.path(), e);
+            throw new MediaPlayerException("Invalid media file: " + track.getPath(), e);
         }
 
         mediaPlayer.setOnPaused(() -> state.set(PlaybackState.PAUSED));
         mediaPlayer.setOnPlaying(() -> state.set(PlaybackState.PLAYING));
         mediaPlayer.setOnStopped(() -> state.set(PlaybackState.STOPPED));
         mediaPlayer.setOnEndOfMedia(() -> {
-            musicIndex = (musicIndex + 1) % songs.size();
+            musicIndex = (musicIndex + 1) % tracks.size();
             playSong(musicIndex);
         });
         mediaPlayer.setOnError(() -> {

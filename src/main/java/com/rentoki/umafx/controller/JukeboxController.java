@@ -8,7 +8,7 @@ import com.rentoki.umafx.exceptions.PreferencesRepositoryException;
 import com.rentoki.umafx.manager.AnimationManager;
 import com.rentoki.umafx.manager.MediaPlayerManager;
 import com.rentoki.umafx.manager.TrayIconManager;
-import com.rentoki.umafx.model.Song;
+import com.rentoki.umafx.model.Track;
 import com.rentoki.umafx.service.CharacterPropertiesService;
 import com.rentoki.umafx.service.WindowPreferencesService;
 import com.rentoki.umafx.util.ContextMenuBuilder;
@@ -201,10 +201,10 @@ public class JukeboxController {
         songQueueDialog.removeAllSong();
         songQueueDialog.setSongs(mediaPlayerManager.getSongs());
 
-        Optional<ObservableList<Song>> result = songQueueDialog.showAndWait();
+        Optional<ObservableList<Track>> result = songQueueDialog.showAndWait();
 
         result.ifPresent(songs -> {
-            List<Path> paths = songs.stream().map(Song::path).toList();
+            List<Path> paths = songs.stream().map(Track::getPath).toList();
             mediaPlayerManager.addSong(paths);
         });
     }
