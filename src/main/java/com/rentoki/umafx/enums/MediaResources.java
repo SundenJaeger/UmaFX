@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.net.URL;
 
 public enum MediaResources {
-    APP_ICON("/com/rentoki/umafx/media/temp.png");
+    APP_ICON("/com/rentoki/umafx/media/temp.png"),
+    FALLBACK_ALBUM_ART("/com/rentoki/umafx/media/album-cover-temp.png");
 
     private final String imagePath;
 
