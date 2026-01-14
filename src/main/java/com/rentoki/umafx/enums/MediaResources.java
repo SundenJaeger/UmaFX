@@ -19,7 +19,7 @@ public enum MediaResources {
         return MediaResources.class.getResource(imagePath);
     }
 
-    public Image getImage() throws MediaResourcesException {
+    public Image getImage() {
         try {
             URL url = getURL();
             if (url == null) {

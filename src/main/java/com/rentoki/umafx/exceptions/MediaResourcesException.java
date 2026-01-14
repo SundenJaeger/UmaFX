@@ -1,6 +1,6 @@
 package com.rentoki.umafx.exceptions;
 
-public class MediaResourcesException extends Exception {
+public class MediaResourcesException extends RuntimeException {
     public MediaResourcesException() {
         super();
     }
