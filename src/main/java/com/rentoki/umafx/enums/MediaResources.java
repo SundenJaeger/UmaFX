@@ -1,6 +1,7 @@
 package com.rentoki.umafx.enums;
 
 import com.rentoki.umafx.exceptions.MediaResourcesException;
+import com.rentoki.umafx.util.Cache;
 import javafx.scene.image.Image;
 
 import java.io.IOException;
@@ -17,7 +18,6 @@ public enum MediaResources {
             "/com/rentoki/umafx/media/metadata-banner2.png"
     );
 
-    private static final Map<String, Image> imageCache = new HashMap<>();
     private static final Random RANDOM = new Random();
     private final String[] imagePaths;
 
@@ -48,11 +48,11 @@ public enum MediaResources {
 
     public Image getImage(int index) {
         String path = imagePaths[index];
-        return imageCache.computeIfAbsent(path, s -> {
+        return Cache.getOrCompute(path, () -> {
             try {
-                URL url = MediaResources.class.getResource(s);
+                URL url = MediaResources.class.getResource(path);
                 if (url == null) {
-                    throw new MediaResourcesException("Resource not found: " + s);
+                    throw new MediaResourcesException("Resource not found: " + path);
                 }
                 return new Image(url.openStream());
             } catch (IOException e) {
