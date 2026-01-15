@@ -18,8 +18,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -51,6 +53,8 @@ public class TrackQueueController {
 
     /* ---------------- FXML Fields ---------------- */
 
+    @FXML
+    private GridPane metadataGridPane;
     @FXML
     private ImageView albumCover;
     @FXML
@@ -155,6 +159,19 @@ public class TrackQueueController {
         trackListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         ReadOnlyObjectProperty<Track> selectedSong = trackListView.getSelectionModel().selectedItemProperty();
 
+        metadataGridPane.backgroundProperty().bind(
+                Bindings.createObjectBinding(
+                        () -> {
+                            if (selectedSong.get() == null) {
+                                return createBackground(MediaResources.METADATA_BANNERS.getImage(0));
+                            }
+
+                            return createBackground(MediaResources.METADATA_BANNERS.getRandomImage());
+                        },
+                        selectedSong
+                )
+        );
+
         albumCover.imageProperty().bind(
                 Bindings.createObjectBinding(
                         () -> selectedSong.get() != null
@@ -204,6 +221,21 @@ public class TrackQueueController {
                         selectedSong
                 )
         );
+    }
+
+    private Background createBackground(Image image) {
+        return new Background(new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(
+                        BackgroundSize.AUTO,
+                        BackgroundSize.AUTO,
+                        true, true,
+                        false, true
+                )
+        ));
     }
 
     private class TrackListCell extends ListCell<Track> {
