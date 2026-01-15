@@ -1,6 +1,7 @@
 package com.rentoki.umafx.model;
 
 import com.rentoki.umafx.enums.MediaResources;
+import com.rentoki.umafx.util.Cache;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -57,7 +58,7 @@ public class TrackMetadata {
             String artist = extractField(tag, FieldKey.ARTIST, FALLBACK_ARTIST);
             String album = extractField(tag, FieldKey.ALBUM, FALLBACK_ALBUM);
             String year = extractField(tag, FieldKey.YEAR, FALLBACK_YEAR);
-            Image albumArt = toFXImage(tag);
+            Image albumArt = toFXImage(tag, path);
 
             return new TrackMetadata(path, title, artist, album, year, albumArt);
         } catch (IOException | CannotReadException | TagException | ReadOnlyFileException |
@@ -136,29 +137,31 @@ public class TrackMetadata {
         return lastDot > 0 ? fileName.substring(0, lastDot) : fileName;
     }
 
-    private static Image toFXImage(Tag tag) {
-        if (tag == null) {
-            return MediaResources.FALLBACK_ALBUM_ART.getImage();
-        }
+    private static Image toFXImage(Tag tag, Path path) {
+        return Cache.getOrCompute(path, () -> {
+            if (tag == null) {
+                return MediaResources.FALLBACK_ALBUM_ART.getImage();
+            }
 
-        Artwork artwork = tag.getFirstArtwork();
-        if (artwork == null) {
-            return MediaResources.FALLBACK_ALBUM_ART.getImage();
-        }
+            Artwork artwork = tag.getFirstArtwork();
+            if (artwork == null) {
+                return MediaResources.FALLBACK_ALBUM_ART.getImage();
+            }
 
-        byte[] imageData = artwork.getBinaryData();
-        if (imageData == null || imageData.length == 0) {
-            return MediaResources.FALLBACK_ALBUM_ART.getImage();
-        }
+            byte[] imageData = artwork.getBinaryData();
+            if (imageData == null || imageData.length == 0) {
+                return MediaResources.FALLBACK_ALBUM_ART.getImage();
+            }
 
-        try {
-            BufferedImage resized = Thumbnails.of(new ByteArrayInputStream(imageData))
-                    .size(150, 150)
-                    .asBufferedImage();
+            try {
+                BufferedImage resized = Thumbnails.of(new ByteArrayInputStream(imageData))
+                        .size(150, 150)
+                        .asBufferedImage();
 
-            return SwingFXUtils.toFXImage(resized, null);
-        } catch (IOException e) {
-            return MediaResources.FALLBACK_ALBUM_ART.getImage();
-        }
+                return SwingFXUtils.toFXImage(resized, null);
+            } catch (IOException e) {
+                return MediaResources.FALLBACK_ALBUM_ART.getImage();
+            }
+        });
     }
 }
