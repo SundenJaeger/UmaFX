@@ -22,6 +22,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -54,7 +55,9 @@ public class TrackQueueController {
     /* ---------------- FXML Fields ---------------- */
 
     @FXML
-    private GridPane metadataGridPane;
+    private Region metadataBgRegion;
+    @FXML
+    private Region colorFilterRegion;
     @FXML
     private ImageView albumCover;
     @FXML
@@ -159,7 +162,7 @@ public class TrackQueueController {
         trackListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         ReadOnlyObjectProperty<Track> selectedSong = trackListView.getSelectionModel().selectedItemProperty();
 
-        metadataGridPane.backgroundProperty().bind(
+        metadataBgRegion.backgroundProperty().bind(
                 Bindings.createObjectBinding(
                         () -> {
                             if (selectedSong.get() == null) {
@@ -169,6 +172,23 @@ public class TrackQueueController {
                             return createBackground(MediaResources.METADATA_BANNERS.getRandomImage());
                         },
                         selectedSong
+                )
+        );
+
+        colorFilterRegion.backgroundProperty().bind(
+                Bindings.createObjectBinding(
+                        () -> {
+                            if (selectedSong.get() == null) {
+                                return new Background(new BackgroundFill(Color.TRANSPARENT, null, null));
+                            }
+
+                            int[] rgb = selectedSong.get().getMetadata().getDominantColor();
+
+                            return new Background(new BackgroundFill(
+                                    Color.rgb(rgb[0], rgb[1], rgb[2]),
+                                    null, null
+                            ));
+                        }, selectedSong
                 )
         );
 

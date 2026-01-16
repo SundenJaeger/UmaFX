@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Line?>
@@ -58,62 +59,70 @@
             </BorderPane>
          </center>
          <top>
-             <GridPane fx:id="metadataGridPane" hgap="10.0" maxWidth="-Infinity" prefWidth="440.0" BorderPane.alignment="CENTER">
-                 <columnConstraints>
-                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" />
-                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" />
-                 </columnConstraints>
-                 <rowConstraints>
-                     <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-                     <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-                     <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-                     <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                 </rowConstraints>
-                 <padding>
-                     <Insets bottom="25.0" left="15.0" right="10.0" top="10.0" />
-                 </padding>
-                 <Label id="trackNameLabel" fx:id="trackTitleLabel" text="Label" textFill="WHITE" GridPane.columnIndex="1">
-                    <font>
-                        <Font size="20.0" />
-                    </font>
-                 </Label>
-                 <HBox spacing="5.0" styleClass="artistLabel" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                     <Label text="Artist:" textFill="WHITE">
+             <StackPane maxWidth="-Infinity" prefWidth="440.0" BorderPane.alignment="CENTER">
+                 <Region fx:id="metadataBgRegion" cache="true" cacheHint="SPEED"/>
+                 <Region fx:id="colorFilterRegion" blendMode="SOFT_LIGHT" cache="true" cacheHint="SPEED" opacity="0.7"/>
+                 <GridPane hgap="10.0" maxWidth="-Infinity" prefWidth="440.0">
+                     <columnConstraints>
+                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity"/>
+                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity"/>
+                     </columnConstraints>
+                     <rowConstraints>
+                         <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES"/>
+                         <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES"/>
+                         <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES"/>
+                         <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES"/>
+                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                     </rowConstraints>
+                     <padding>
+                         <Insets bottom="25.0" left="15.0" right="10.0" top="10.0"/>
+                     </padding>
+                     <Label id="trackNameLabel" fx:id="trackTitleLabel" text="Label" textFill="WHITE"
+                            GridPane.columnIndex="1">
                          <font>
-                             <Font size="15.0" />
+                             <Font size="20.0"/>
                          </font>
                      </Label>
-                     <Label fx:id="artistLabel" text="Unknown Artist" />
-                 </HBox>
-                 <HBox spacing="5.0" styleClass="albumLabel" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                     <Label styleClass="albumLabel" text="Album:" textFill="WHITE">
+                     <HBox spacing="5.0" styleClass="artistLabel" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                         <Label text="Artist:" textFill="WHITE">
+                             <font>
+                                 <Font size="15.0"/>
+                             </font>
+                         </Label>
+                         <Label fx:id="artistLabel" text="Unknown Artist"/>
+                     </HBox>
+                     <HBox spacing="5.0" styleClass="albumLabel" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                         <Label styleClass="albumLabel" text="Album:" textFill="WHITE">
+                             <font>
+                                 <Font size="15.0"/>
+                             </font>
+                         </Label>
+                         <Label fx:id="albumLabel" text="Unknown Album"/>
+                     </HBox>
+                     <HBox spacing="5.0" styleClass="yearLabel" GridPane.columnIndex="1" GridPane.rowIndex="4"
+                           GridPane.valignment="TOP">
+                         <Label text="Year:" textFill="WHITE">
+                             <font>
+                                 <Font size="15.0"/>
+                             </font>
+                         </Label>
+                         <Label fx:id="yearLabel" text="Unknown Year"/>
+                     </HBox>
+                     <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                     <ImageView fx:id="albumCover" cache="true" cacheHint="SPEED" fitHeight="110.0" fitWidth="110.0"
+                                pickOnBounds="true" GridPane.rowSpan="5"/>
+                     <Button mnemonicParsing="false" style="-fx-background-radius: 15px; -fx-background-color: #fbfbfd;"
+                             GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="2">
+                         <graphic>
+                             <FontIcon iconColor="#753e0f" iconLiteral="mdi2e-exclamation-thick" iconSize="25"/>
+                         </graphic>
                          <font>
-                             <Font size="15.0" />
+                             <Font size="5.0"/>
                          </font>
-                     </Label>
-                     <Label fx:id="albumLabel" text="Unknown Album" />
-                 </HBox>
-                 <HBox spacing="5.0" styleClass="yearLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="TOP">
-                     <Label text="Year:" textFill="WHITE">
-                         <font>
-                             <Font size="15.0" />
-                         </font>
-                     </Label>
-                     <Label fx:id="yearLabel" text="Unknown Year" />
-                 </HBox>
-                 <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                 <ImageView fx:id="albumCover" cache="true" cacheHint="SPEED" fitHeight="110.0" fitWidth="110.0" pickOnBounds="true" GridPane.rowSpan="5" />
-                 <Button mnemonicParsing="false" style="-fx-background-radius: 15px; -fx-background-color: #fbfbfd;" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="2">
-                    <graphic>
-                        <FontIcon iconColor="#753e0f" iconLiteral="mdi2e-exclamation-thick" iconSize="25" />
-                    </graphic>
-                    <font>
-                        <Font size="5.0" />
-                    </font>
-                 </Button>
-             </GridPane>
+                     </Button>
+                 </GridPane>
+             </StackPane>
          </top>
       </BorderPane>
    </center>

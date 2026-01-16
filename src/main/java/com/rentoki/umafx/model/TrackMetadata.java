@@ -1,5 +1,6 @@
 package com.rentoki.umafx.model;
 
+import com.rentoki.colorthief.ColorThief;
 import com.rentoki.umafx.enums.MediaResources;
 import com.rentoki.umafx.util.Cache;
 import javafx.beans.property.ObjectProperty;
@@ -25,6 +26,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
 
 public class TrackMetadata {
     private static final String FALLBACK_ARTIST = "Unknown Artist";
@@ -37,14 +39,16 @@ public class TrackMetadata {
     private final StringProperty album = new SimpleStringProperty();
     private final StringProperty year = new SimpleStringProperty();
     private final ObjectProperty<Image> albumArt = new SimpleObjectProperty<>();
+    private final ObjectProperty<int[]> dominantColor = new SimpleObjectProperty<>();
 
-    private TrackMetadata(Path path, String title, String artist, String album, String year, Image albumArt) {
+    private TrackMetadata(Path path, String title, String artist, String album, String year, Image albumArt, int[] dominantColor) {
         this.path.set(path);
         this.title.set(title);
         this.artist.set(artist);
         this.album.set(album);
         this.year.set(year);
         this.albumArt.set(albumArt);
+        this.dominantColor.set(dominantColor);
     }
 
     /* ---------------- Public API ---------------- */
@@ -59,11 +63,12 @@ public class TrackMetadata {
             String album = extractField(tag, FieldKey.ALBUM, FALLBACK_ALBUM);
             String year = extractField(tag, FieldKey.YEAR, FALLBACK_YEAR);
             Image albumArt = toFXImage(tag, path);
+            int[] dominantColor = extractDominantColor(albumArt, path);
 
-            return new TrackMetadata(path, title, artist, album, year, albumArt);
+            return new TrackMetadata(path, title, artist, album, year, albumArt, dominantColor);
         } catch (IOException | CannotReadException | TagException | ReadOnlyFileException |
                  InvalidAudioFrameException e) {
-            return new TrackMetadata(path, getFileNameWithoutExtension(path), FALLBACK_ARTIST, FALLBACK_ALBUM, FALLBACK_YEAR, MediaResources.FALLBACK_ALBUM_ART.getImage());
+            return new TrackMetadata(path, getFileNameWithoutExtension(path), FALLBACK_ARTIST, FALLBACK_ALBUM, FALLBACK_YEAR, MediaResources.FALLBACK_ALBUM_ART.getImage(), new int[]{0, 255, 0});
         }
     }
 
@@ -93,6 +98,10 @@ public class TrackMetadata {
         return albumArt;
     }
 
+    public ObjectProperty<int[]> dominantColorProperty() {
+        return dominantColor;
+    }
+
     /* ---------------- Getters/Setters ---------------- */
 
     public Path getPath() {
@@ -117,6 +126,10 @@ public class TrackMetadata {
 
     public Image getAlbumArt() {
         return albumArt.get();
+    }
+
+    public int[] getDominantColor() {
+        return dominantColor.get();
     }
 
     /* ---------------- Helpers ---------------- */
@@ -163,5 +176,9 @@ public class TrackMetadata {
                 return MediaResources.FALLBACK_ALBUM_ART.getImage();
             }
         });
+    }
+
+    private static int[] extractDominantColor(Image image, Path path) {
+        return Cache.getOrCompute(path + "_color", () -> ColorThief.getColor(SwingFXUtils.fromFXImage(image, null)));
     }
 }

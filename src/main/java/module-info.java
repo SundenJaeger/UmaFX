@@ -12,6 +12,7 @@ module com.rentoki.umafx {
     requires jaudiotagger;
     requires javafx.swing;
     requires net.coobird.thumbnailator;
+    requires color.thief;
 
     opens com.rentoki.umafx to javafx.fxml;
     exports com.rentoki.umafx;
