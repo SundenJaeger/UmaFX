@@ -13,8 +13,6 @@ public class TrackCellController {
     private Label trackTitleLabel;
     @FXML
     private Label requesterLabel;
-    @FXML
-    private Label timePassedLabel;
 
     public void setSong(Track track) {
         TrackMetadata metadata = track.getMetadata();

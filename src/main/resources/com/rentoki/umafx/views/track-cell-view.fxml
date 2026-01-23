@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -44,14 +42,5 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <HBox alignment="CENTER_LEFT" minWidth="-Infinity" spacing="10.0">
-         <StackPane id="requestDateContainer" style="-fx-background-color: #ece7e4; -fx-background-radius: 10px;">
-            <padding>
-               <Insets bottom="1.0" left="20.0" right="20.0" top="1.0" />
-            </padding>
-            <Label id="requestDateLabel" minWidth="-Infinity" text="Request Date" textFill="#753e0f" />
-         </StackPane>
-         <Label id="timePassedLabel" fx:id="timePassedLabel" minWidth="-Infinity" text="Label" textFill="#753e0f" />
-      </HBox>
    </VBox>
 </GridPane>
