@@ -5,6 +5,7 @@ import com.rentoki.umafx.enums.MediaResources;
 import com.rentoki.umafx.enums.View;
 import com.rentoki.umafx.exceptions.DesktopActionException;
 import com.rentoki.umafx.model.Track;
+import com.rentoki.umafx.util.ButtonUtils;
 import com.rentoki.umafx.util.ContextMenuBuilder;
 import com.rentoki.umafx.util.DesktopAction;
 import com.rentoki.umafx.util.ShowAlert;
@@ -269,14 +270,8 @@ public class TrackQueueController {
     }
 
     private void setActionButtonsShape(Button... buttons) {
-        Rectangle rectangle = new Rectangle();
-        rectangle.setArcHeight(10);
-        rectangle.setArcWidth(10);
-        rectangle.widthProperty().bind(addTrackButton.widthProperty());
-        rectangle.heightProperty().bind(addTrackButton.heightProperty());
-
         for (Button button : buttons) {
-            button.setShape(rectangle);
+            ButtonUtils.round(button, 10);
         }
     }
 
