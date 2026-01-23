@@ -54,7 +54,7 @@ public class TrackQueueDialog extends Dialog<ObservableList<Track>> {
     }
 
     public void removeAllSong() {
-        trackQueueController.removeAllSong();
+        trackQueueController.removeAllTracks();
     }
 
     public void setSongs(ObservableList<Track> tracks) {

@@ -18,11 +18,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -44,7 +48,7 @@ public class TrackQueueController {
         this.tracks.setAll(tracks);
     }
 
-    public void removeAllSong() {
+    public void removeAllTracks() {
         tracks.clear();
     }
 
@@ -69,10 +73,15 @@ public class TrackQueueController {
     @FXML
     private Label yearLabel;
 
+    //Action Buttons
     @FXML
-    private Button removeSongButton;
+    private Button addFolderButton;
     @FXML
-    private Button removeAllSongButton;
+    private Button addTrackButton;
+    @FXML
+    private Button removeTrackButton;
+    @FXML
+    private Button removeAllTracksButton;
 
     @FXML
     private ListView<Track> trackListView;
@@ -82,6 +91,7 @@ public class TrackQueueController {
     @FXML
     private void initialize() {
         selectedTracks = trackListView.getSelectionModel().getSelectedItems();
+        setActionButtonsShape(addFolderButton, addTrackButton, removeTrackButton, removeAllTracksButton);
         setupDisableButtonProperty();
         setupTrackListView();
         setupDeleteKeyHandler();
@@ -108,7 +118,7 @@ public class TrackQueueController {
     }
 
     @FXML
-    private void addSong(ActionEvent event) {
+    private void addTrack(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Music files", "*.mp3;*.wav"));
@@ -121,7 +131,7 @@ public class TrackQueueController {
     }
 
     @FXML
-    private void removeSong() {
+    private void removeTrack() {
         tracks.removeAll(selectedTracks);
     }
 
@@ -130,7 +140,7 @@ public class TrackQueueController {
     private void setupDeleteKeyHandler() {
         trackListView.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.DELETE) {
-                removeSong();
+                removeTrack();
             }
         });
     }
@@ -152,8 +162,8 @@ public class TrackQueueController {
     }
 
     private void setupDisableButtonProperty() {
-        removeSongButton.disableProperty().bind(Bindings.isEmpty(tracks).or(Bindings.isEmpty(selectedTracks)));
-        removeAllSongButton.disableProperty().bind(Bindings.isEmpty(tracks));
+        removeTrackButton.disableProperty().bind(Bindings.isEmpty(tracks).or(Bindings.isEmpty(selectedTracks)));
+        removeAllTracksButton.disableProperty().bind(Bindings.isEmpty(tracks));
     }
 
     private void setupTrackListView() {
@@ -258,11 +268,23 @@ public class TrackQueueController {
         ));
     }
 
+    private void setActionButtonsShape(Button... buttons) {
+        Rectangle rectangle = new Rectangle();
+        rectangle.setArcHeight(10);
+        rectangle.setArcWidth(10);
+        rectangle.widthProperty().bind(addTrackButton.widthProperty());
+        rectangle.heightProperty().bind(addTrackButton.heightProperty());
+
+        for (Button button : buttons) {
+            button.setShape(rectangle);
+        }
+    }
+
     private class TrackListCell extends ListCell<Track> {
         private final ContextMenu contextMenu = new ContextMenuBuilder()
                 .addMenuItem(openFileLocation())
                 .addSeparator()
-                .addMenuItem("Remove", TrackQueueController.this::removeSong)
+                .addMenuItem("Remove", TrackQueueController.this::removeTrack)
                 .build();
 
         private final Parent root;
