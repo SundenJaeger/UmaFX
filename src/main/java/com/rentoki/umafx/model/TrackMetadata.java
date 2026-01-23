@@ -2,7 +2,7 @@ package com.rentoki.umafx.model;
 
 import com.rentoki.colorthief.ColorThief;
 import com.rentoki.umafx.enums.MediaResources;
-import com.rentoki.umafx.util.Cache;
+import com.rentoki.umafx.manager.CacheManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,13 +20,10 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.images.Artwork;
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Arrays;
 
 public class TrackMetadata {
     private static final String FALLBACK_ARTIST = "Unknown Artist";
@@ -151,7 +148,7 @@ public class TrackMetadata {
     }
 
     private static Image toFXImage(Tag tag, Path path) {
-        return Cache.getOrCompute(path, () -> {
+        return CacheManager.getOrComputeImage(path, () -> {
             if (tag == null) {
                 return MediaResources.FALLBACK_ALBUM_ART.getImage();
             }
@@ -179,6 +176,6 @@ public class TrackMetadata {
     }
 
     private static int[] extractDominantColor(Image image, Path path) {
-        return Cache.getOrCompute(path + "_color", () -> ColorThief.getColor(SwingFXUtils.fromFXImage(image, null)));
+        return CacheManager.getOrComputeDominantColor(path, () -> ColorThief.getColor(SwingFXUtils.fromFXImage(image, null)));
     }
 }

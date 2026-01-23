@@ -13,6 +13,7 @@ module com.rentoki.umafx {
     requires javafx.swing;
     requires net.coobird.thumbnailator;
     requires color.thief;
+    requires com.github.benmanes.caffeine;
 
     opens com.rentoki.umafx to javafx.fxml;
     exports com.rentoki.umafx;

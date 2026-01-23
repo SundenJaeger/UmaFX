@@ -1,13 +1,12 @@
 package com.rentoki.umafx.enums;
 
 import com.rentoki.umafx.exceptions.MediaResourcesException;
-import com.rentoki.umafx.util.Cache;
+import com.rentoki.umafx.manager.CacheManager;
 import javafx.scene.image.Image;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.file.Path;
 import java.util.Random;
 
 public enum MediaResources {
@@ -48,7 +47,7 @@ public enum MediaResources {
 
     public Image getImage(int index) {
         String path = imagePaths[index];
-        return Cache.getOrCompute(path, () -> {
+        return CacheManager.getOrComputeImage(Path.of(path), () -> {
             try {
                 URL url = MediaResources.class.getResource(path);
                 if (url == null) {
