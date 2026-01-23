@@ -45,6 +45,7 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        System.setProperty("prism.lcdtext", "false");
         initializeTray(stage);
         Scene scene = loadScene();
         configureStage(stage, scene);
