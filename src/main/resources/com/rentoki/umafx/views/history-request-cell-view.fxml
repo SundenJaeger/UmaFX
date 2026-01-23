@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<GridPane hgap="5.0" stylesheets="@../css/track-cell.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+      <ColumnConstraints hgrow="ALWAYS" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="60.0">
+      <ImageView fx:id="albumImageView" cache="true" cacheHint="SPEED" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true">
+         <Image url="@../media/album-cover-temp.png" />
+      </ImageView>
+   </StackPane>
+   <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="60.0" style="-fx-border-color: #cbcbcb; -fx-border-radius: 5;" GridPane.columnIndex="1">
+      <ImageView fx:id="userProfileImageView" cache="true" cacheHint="SPEED" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true">
+         <Image url="@../media/profile-pic-temp.png" />
+      </ImageView>
+   </StackPane>
+   <VBox GridPane.columnIndex="2" GridPane.valignment="TOP">
+      <Label id="trackTitleLabel" fx:id="trackTitleLabel" text="Label" textFill="#753e0f">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Separator />
+      <Label id="requesterLabel" fx:id="requesterLabel" text="Label" textFill="#753e0f">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <HBox alignment="CENTER_LEFT" minWidth="-Infinity" spacing="10.0">
+         <StackPane id="requestDateContainer" style="-fx-background-color: #ece7e4; -fx-background-radius: 10px;">
+            <padding>
+               <Insets bottom="1.0" left="20.0" right="20.0" top="1.0" />
+            </padding>
+            <Label id="requestDateLabel" minWidth="-Infinity" text="Request Date" textFill="#753e0f" />
+         </StackPane>
+         <Label id="timePassedLabel" fx:id="timePassedLabel" minWidth="-Infinity" text="Label" textFill="#753e0f" />
+      </HBox>
+   </VBox>
+</GridPane>
