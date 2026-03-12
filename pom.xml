@@ -14,13 +14,6 @@
         <junit.version>5.12.1</junit.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/SundenJaeger/my-maven-packages</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -117,18 +110,15 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>com.rentoki.umafx.Launcher</mainClass>
-
-                            <jvmArgs>
-                                <jvmArg>--enable-native-access=javafx.graphics,javafx.media</jvmArg>
-                            </jvmArgs>
-
-                            <launcherArgs>
-                                <launcherArg>--enable-native-access=javafx.graphics,javafx.media</launcherArg>
-                            </launcherArgs>
+                            <options>
+                                <option>--enable-native-access=javafx.graphics,javafx.media</option>
+                                <option>--enable-native-access=org.eclipse.swt.win32.win32.x86_64</option>
+                            </options>
 
                             <launcher>UmaFX</launcher>
                             <jlinkZipName>UmaFX</jlinkZipName>
                             <jlinkImageName>UmaFX</jlinkImageName>
+                            <compress>2</compress>
                             <noManPages>true</noManPages>
                             <stripDebug>true</stripDebug>
                             <noHeaderFiles>true</noHeaderFiles>
