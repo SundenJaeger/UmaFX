@@ -58,9 +58,9 @@
             <version>0.4.21</version>
         </dependency>
         <dependency>
-            <groupId>com.dustinredmond</groupId>
-            <artifactId>fxtrayicon</artifactId>
-            <version>4.2.4</version>
+            <groupId>io.github.sundenjaeger</groupId>
+            <artifactId>systemtrayfx-core</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>

@@ -1,11 +1,9 @@
 package com.rentoki.umafx.manager;
 
-import com.dustinredmond.fxtrayicon.FXTrayIcon;
 import com.rentoki.umafx.enums.MediaResources;
 import com.rentoki.umafx.enums.PlaybackState;
 import com.rentoki.umafx.exceptions.EmptySongListException;
 import com.rentoki.umafx.exceptions.MediaPlayerException;
-import com.rentoki.umafx.exceptions.MediaResourcesException;
 import com.rentoki.umafx.exceptions.PreferencesRepositoryException;
 import com.rentoki.umafx.util.ShowAlert;
 import javafx.beans.binding.Bindings;
@@ -14,9 +12,10 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
+import systemtrayfx.core.*;
 
 public class TrayIconManager {
-    private FXTrayIcon fxTrayIcon;
+    private SystemTrayFX systemTrayFX;
 
     private final Stage stage;
     private final MediaPlayerManager mediaPlayerManager;
@@ -30,21 +29,11 @@ public class TrayIconManager {
         this.mediaPlayerManager = mediaPlayerManager;
         this.openTrackQueue = openTrackQueue;
         this.windowPositionSaver = windowPositionSaver;
+
+        systemTrayFX = createTrayIcon();
     }
 
     /* ---------------- Public API ---------------- */
-
-    public void show() {
-        fxTrayIcon = createTrayIcon();
-        configureMenu();
-        fxTrayIcon.show();
-    }
-
-    public void hide() {
-        if (fxTrayIcon != null) {
-            fxTrayIcon.hide();
-        }
-    }
 
     public void resetWindow() {
         stage.setX(0);
@@ -120,28 +109,28 @@ public class TrayIconManager {
 
     /* ---------------- Internals ---------------- */
 
-    private FXTrayIcon createTrayIcon() {
-        try {
-            return new FXTrayIcon(stage, MediaResources.APP_ICON.getImage());
-        } catch (MediaResourcesException e) {
-            return new FXTrayIcon(stage);
-        }
-    }
+    private SystemTrayFX createTrayIcon() {
+        systemTrayFX = new SystemTrayFX(stage, "UmaFX", MediaResources.APP_ICON.getImage());
 
-    private void configureMenu() {
-        fxTrayIcon.addMenuItem("Reset Window", event -> resetWindow());
+        TrayMenuItem resetWindowItem = new TrayMenuItem("Reset Window");
+        resetWindowItem.setOnAction(event -> resetWindow());
 
-        fxTrayIcon.insertSeparator(1);
-        fxTrayIcon.addMenuItem("Open Track Queue", event -> openTrackQueue.run());
+        TrayMenuItem openTrackQueueItem = new TrayMenuItem("Open Track Queue");
+        openTrackQueueItem.setOnAction(event -> openTrackQueue.run());
 
-        fxTrayIcon.addSeparator();
-        fxTrayIcon.addMenuItem(playPauseItem());
-        fxTrayIcon.addMenuItem(stopItem());
-        fxTrayIcon.addMenuItem(skipItem());
-        fxTrayIcon.addMenuItem(volumeItem());
+        systemTrayFX.addEntry(
+                resetWindowItem,
+                openTrackQueueItem,
+                new Separator(),
+                new FXMenuItemWrapper(playPauseItem()),
+                new FXMenuItemWrapper(stopItem()),
+                new FXMenuItemWrapper(skipItem()),
+                new FXMenuItemWrapper(volumeItem()),
+                new Separator(),
+                new TrayExitMenuItem("Exit UmaFX")
+        );
 
-        fxTrayIcon.addSeparator();
-        fxTrayIcon.addExitItem("Exit UmaFX");
+        return systemTrayFX;
     }
 
     private void runSafe(Runnable action) {

@@ -6,7 +6,6 @@ module com.rentoki.umafx {
     requires tools.jackson.databind;
     requires javafx.media;
     requires javafx.base;
-    requires com.dustinredmond.fxtrayicon;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.materialdesign2;
     requires jaudiotagger;
@@ -14,6 +13,7 @@ module com.rentoki.umafx {
     requires net.coobird.thumbnailator;
     requires color.thief;
     requires com.github.benmanes.caffeine;
+    requires systemtrayfx.core;
 
     opens com.rentoki.umafx to javafx.fxml;
     exports com.rentoki.umafx;

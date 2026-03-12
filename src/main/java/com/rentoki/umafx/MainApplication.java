@@ -58,7 +58,6 @@ public class MainApplication extends Application {
 
     private void initializeTray(Stage stage) {
         trayIconManager = new TrayIconManager(stage, mediaPlayerManager, () -> jukeboxController.openTrackQueue(), windowPreferencesService::savePos);
-        trayIconManager.show();
     }
 
     private Scene loadScene() throws IOException {

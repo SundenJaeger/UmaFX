@@ -1,6 +1,6 @@
 package com.rentoki.umafx.model;
 
-import com.rentoki.colorthief.ColorThief;
+import colorthief.ColorThief;
 import com.rentoki.umafx.enums.MediaResources;
 import com.rentoki.umafx.manager.CacheManager;
 import javafx.beans.property.ObjectProperty;
