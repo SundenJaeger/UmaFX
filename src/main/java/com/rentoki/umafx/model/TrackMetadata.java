@@ -51,21 +51,22 @@ public class TrackMetadata {
     /* ---------------- Public API ---------------- */
 
     public static TrackMetadata fromFile(Path path) {
+        Path normalizedPath = path.toAbsolutePath().normalize();
         try {
-            AudioFile audioFile = AudioFileIO.read(path.toFile());
+            AudioFile audioFile = AudioFileIO.read(normalizedPath.toFile());
             Tag tag = audioFile.getTag();
 
-            String title = extractField(tag, FieldKey.TITLE, getFileNameWithoutExtension(path));
+            String title = extractField(tag, FieldKey.TITLE, getFileNameWithoutExtension(normalizedPath));
             String artist = extractField(tag, FieldKey.ARTIST, FALLBACK_ARTIST);
             String album = extractField(tag, FieldKey.ALBUM, FALLBACK_ALBUM);
             String year = extractField(tag, FieldKey.YEAR, FALLBACK_YEAR);
-            Image albumArt = toFXImage(tag, path);
-            int[] dominantColor = extractDominantColor(albumArt, path);
+            Image albumArt = toFXImage(tag, normalizedPath);
+            int[] dominantColor = extractDominantColor(albumArt, normalizedPath);
 
-            return new TrackMetadata(path, title, artist, album, year, albumArt, dominantColor);
+            return new TrackMetadata(normalizedPath, title, artist, album, year, albumArt, dominantColor);
         } catch (IOException | CannotReadException | TagException | ReadOnlyFileException |
                  InvalidAudioFrameException e) {
-            return new TrackMetadata(path, getFileNameWithoutExtension(path), FALLBACK_ARTIST, FALLBACK_ALBUM, FALLBACK_YEAR, MediaResources.FALLBACK_ALBUM_ART.getImage(), new int[]{0, 255, 0});
+            return new TrackMetadata(normalizedPath, getFileNameWithoutExtension(normalizedPath), FALLBACK_ARTIST, FALLBACK_ALBUM, FALLBACK_YEAR, MediaResources.FALLBACK_ALBUM_ART.getImage(), new int[]{0, 255, 0});
         }
     }
 
