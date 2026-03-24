@@ -12,13 +12,13 @@ public class CacheManager {
     //TODO: Add a logger
     private static final Cache<Path, Image> IMAGE_CACHE = Caffeine.newBuilder()
             .maximumSize(200)
-            .softValues()
             .expireAfterAccess(30, TimeUnit.MINUTES)
             .build();
 
     //TODO: Add a logger
     private static final Cache<Path, int[]> DOMINANT_COLOR_CACHE = Caffeine.newBuilder()
             .maximumSize(200)
+            .expireAfterAccess(30, TimeUnit.MINUTES)
             .build();
 
     public static Image getOrComputeImage(Path key, Supplier<Image> loader) {
