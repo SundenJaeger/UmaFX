@@ -35,17 +35,16 @@ public class TrackMetadata {
     private final StringProperty artist = new SimpleStringProperty();
     private final StringProperty album = new SimpleStringProperty();
     private final StringProperty year = new SimpleStringProperty();
-    private final ObjectProperty<Image> albumArt = new SimpleObjectProperty<>();
-    private final ObjectProperty<int[]> dominantColor = new SimpleObjectProperty<>();
 
-    private TrackMetadata(Path path, String title, String artist, String album, String year, Image albumArt, int[] dominantColor) {
+    private final Tag tag;
+
+    private TrackMetadata(Path path, String title, String artist, String album, String year, Tag tag) {
         this.path.set(path);
         this.title.set(title);
         this.artist.set(artist);
         this.album.set(album);
         this.year.set(year);
-        this.albumArt.set(albumArt);
-        this.dominantColor.set(dominantColor);
+        this.tag = tag;
     }
 
     /* ---------------- Public API ---------------- */
@@ -60,13 +59,11 @@ public class TrackMetadata {
             String artist = extractField(tag, FieldKey.ARTIST, FALLBACK_ARTIST);
             String album = extractField(tag, FieldKey.ALBUM, FALLBACK_ALBUM);
             String year = extractField(tag, FieldKey.YEAR, FALLBACK_YEAR);
-            Image albumArt = toFXImage(tag, normalizedPath);
-            int[] dominantColor = extractDominantColor(albumArt, normalizedPath);
 
-            return new TrackMetadata(normalizedPath, title, artist, album, year, albumArt, dominantColor);
+            return new TrackMetadata(normalizedPath, title, artist, album, year, tag);
         } catch (IOException | CannotReadException | TagException | ReadOnlyFileException |
                  InvalidAudioFrameException e) {
-            return new TrackMetadata(normalizedPath, getFileNameWithoutExtension(normalizedPath), FALLBACK_ARTIST, FALLBACK_ALBUM, FALLBACK_YEAR, MediaResources.FALLBACK_ALBUM_ART.getImage(), new int[]{0, 255, 0});
+            return new TrackMetadata(normalizedPath, getFileNameWithoutExtension(normalizedPath), FALLBACK_ARTIST, FALLBACK_ALBUM, FALLBACK_YEAR, null);
         }
     }
 
@@ -92,14 +89,6 @@ public class TrackMetadata {
         return year;
     }
 
-    public ObjectProperty<Image> albumArtProperty() {
-        return albumArt;
-    }
-
-    public ObjectProperty<int[]> dominantColorProperty() {
-        return dominantColor;
-    }
-
     /* ---------------- Getters/Setters ---------------- */
 
     public Path getPath() {
@@ -123,11 +112,11 @@ public class TrackMetadata {
     }
 
     public Image getAlbumArt() {
-        return albumArt.get();
+        return CacheManager.getOrComputeImage(getPath(), () -> loadAlbumArt(tag));
     }
 
     public int[] getDominantColor() {
-        return dominantColor.get();
+        return CacheManager.getOrComputeDominantColor(getPath(), () -> ColorThief.getColor(SwingFXUtils.fromFXImage(getAlbumArt(), null)));
     }
 
     /* ---------------- Helpers ---------------- */
@@ -148,35 +137,29 @@ public class TrackMetadata {
         return lastDot > 0 ? fileName.substring(0, lastDot) : fileName;
     }
 
-    private static Image toFXImage(Tag tag, Path path) {
-        return CacheManager.getOrComputeImage(path, () -> {
-            if (tag == null) {
-                return MediaResources.FALLBACK_ALBUM_ART.getImage();
-            }
+    private static Image loadAlbumArt(Tag tag) {
+        if (tag == null) {
+            return MediaResources.FALLBACK_ALBUM_ART.getImage();
+        }
 
-            Artwork artwork = tag.getFirstArtwork();
-            if (artwork == null) {
-                return MediaResources.FALLBACK_ALBUM_ART.getImage();
-            }
+        Artwork artwork = tag.getFirstArtwork();
+        if (artwork == null) {
+            return MediaResources.FALLBACK_ALBUM_ART.getImage();
+        }
 
-            byte[] imageData = artwork.getBinaryData();
-            if (imageData == null || imageData.length == 0) {
-                return MediaResources.FALLBACK_ALBUM_ART.getImage();
-            }
+        byte[] imageData = artwork.getBinaryData();
+        if (imageData == null || imageData.length == 0) {
+            return MediaResources.FALLBACK_ALBUM_ART.getImage();
+        }
 
-            try {
-                BufferedImage resized = Thumbnails.of(new ByteArrayInputStream(imageData))
-                        .size(150, 150)
-                        .asBufferedImage();
+        try {
+            BufferedImage resized = Thumbnails.of(new ByteArrayInputStream(imageData))
+                    .size(150, 150)
+                    .asBufferedImage();
 
-                return SwingFXUtils.toFXImage(resized, null);
-            } catch (IOException e) {
-                return MediaResources.FALLBACK_ALBUM_ART.getImage();
-            }
-        });
-    }
-
-    private static int[] extractDominantColor(Image image, Path path) {
-        return CacheManager.getOrComputeDominantColor(path, () -> ColorThief.getColor(SwingFXUtils.fromFXImage(image, null)));
+            return SwingFXUtils.toFXImage(resized, null);
+        } catch (IOException e) {
+            return MediaResources.FALLBACK_ALBUM_ART.getImage();
+        }
     }
 }

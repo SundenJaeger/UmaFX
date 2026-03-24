@@ -17,7 +17,7 @@ public class TrackCellController {
     public void setSong(Track track) {
         TrackMetadata metadata = track.getMetadata();
 
-        albumImageView.imageProperty().bind(metadata.albumArtProperty());
+        albumImageView.setImage(metadata.getAlbumArt());
         trackTitleLabel.textProperty().bind(metadata.titleProperty());
         requesterLabel.textProperty().bind(track.requesterProperty());
     }
