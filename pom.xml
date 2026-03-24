@@ -11,6 +11,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
         <junit.version>5.12.1</junit.version>
     </properties>
 
@@ -18,12 +20,12 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>25.0.1</version>
+            <version>25.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>25.0.1</version>
+            <version>25.0.2</version>
         </dependency>
         <dependency>
             <groupId>tools.jackson.core</groupId>
@@ -33,12 +35,12 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-media</artifactId>
-            <version>25.0.1</version>
+            <version>25.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
-            <version>25.0.1</version>
+            <version>25.0.2</version>
         </dependency>
         <dependency>
             <groupId>net.jthink</groupId>
@@ -53,7 +55,7 @@
         <dependency>
             <groupId>io.github.sundenjaeger</groupId>
             <artifactId>systemtrayfx-core</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
