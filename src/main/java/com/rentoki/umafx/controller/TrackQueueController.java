@@ -1,5 +1,6 @@
 package com.rentoki.umafx.controller;
 
+import com.rentoki.umafx.dialog.TrackPropertiesDialog;
 import com.rentoki.umafx.enums.ErrorHeaders;
 import com.rentoki.umafx.enums.MediaResources;
 import com.rentoki.umafx.enums.View;
@@ -161,6 +162,17 @@ public class TrackQueueController {
         return menuItem;
     }
 
+    private MenuItem openTrackProperties() {
+        MenuItem menuItem = new MenuItem("Properties");
+
+        menuItem.setOnAction(event -> {
+            Track selectedTrack = trackListView.getSelectionModel().getSelectedItem();
+            new TrackPropertiesDialog(selectedTrack).show();
+        });
+
+        return menuItem;
+    }
+
     private void setupDisableButtonProperty() {
         removeTrackButton.disableProperty().bind(Bindings.isEmpty(tracks).or(Bindings.isEmpty(selectedTracks)));
         removeAllTracksButton.disableProperty().bind(Bindings.isEmpty(tracks));
@@ -279,6 +291,8 @@ public class TrackQueueController {
                 .addMenuItem(openFileLocation())
                 .addSeparator()
                 .addMenuItem("Remove", TrackQueueController.this::removeTrack)
+                .addSeparator()
+                .addMenuItem(openTrackProperties())
                 .build();
 
         private final Parent root;

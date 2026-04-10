@@ -15,7 +15,6 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
-<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="500.0" stylesheets="@../css/track-queue.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rentoki.umafx.controller.TrackQueueController">
    <center>
@@ -112,14 +111,6 @@
                      </HBox>
                      <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      <ImageView fx:id="albumCover" cache="true" cacheHint="SPEED" fitHeight="110.0" fitWidth="110.0" pickOnBounds="true" GridPane.rowSpan="5" />
-                     <Button mnemonicParsing="false" style="-fx-background-radius: 15px; -fx-background-color: #fbfbfd;" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="2">
-                         <graphic>
-                             <FontIcon iconColor="#753e0f" iconLiteral="mdi2e-exclamation-thick" iconSize="25" />
-                         </graphic>
-                         <font>
-                             <Font size="5.0" />
-                         </font>
-                     </Button>
                  </GridPane>
                <BorderPane.margin>
                   <Insets />
