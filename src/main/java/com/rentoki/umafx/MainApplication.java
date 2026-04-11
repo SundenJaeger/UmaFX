@@ -50,7 +50,6 @@ public class MainApplication extends Application {
         Scene scene = loadScene();
         configureStage(stage, scene);
         restoreWindowPosition(stage);
-        setupShutdown(stage);
         loadFont();
     }
 
@@ -114,14 +113,6 @@ public class MainApplication extends Application {
     private void restoreWindowPosition(Stage stage) {
         stage.setX(windowPreferencesService.getPosX());
         stage.setY(windowPreferencesService.getPosY());
-    }
-
-    private void setupShutdown(Stage stage) {
-        stage.setOnCloseRequest(windowEvent -> {
-            Platform.setImplicitExit(true);
-            Platform.exit();
-            System.exit(0);
-        });
     }
 
     private void loadFont() {

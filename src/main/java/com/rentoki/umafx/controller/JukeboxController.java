@@ -218,11 +218,7 @@ public class JukeboxController {
                 .addMenuItem(trayIconManager.skipItem())
                 .addMenuItem(trayIconManager.volumeItem())
                 .addSeparator()
-                .addMenuItem("Exit", () -> {
-                    Platform.setImplicitExit(true);
-                    Platform.exit();
-                    System.exit(0);
-                })
+                .addMenuItem("Exit", Platform::exit)
                 .build();
 
         jukeboxImageView.setOnContextMenuRequested(event -> jukeboxContextMenu.show(jukeboxImageView, event.getScreenX(), event.getScreenY()));
