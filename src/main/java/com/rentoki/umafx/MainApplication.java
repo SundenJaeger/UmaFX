@@ -4,16 +4,13 @@ import com.rentoki.umafx.controller.JukeboxController;
 import com.rentoki.umafx.enums.MediaResources;
 import com.rentoki.umafx.enums.View;
 import com.rentoki.umafx.exceptions.MediaResourcesException;
-import com.rentoki.umafx.interfaces.PreferencesRepository;
 import com.rentoki.umafx.interfaces.PropertiesRepository;
 import com.rentoki.umafx.manager.MediaPlayerManager;
 import com.rentoki.umafx.manager.TrayIconManager;
-import com.rentoki.umafx.repository.PreferencesRepositoryImpl;
 import com.rentoki.umafx.repository.PropertiesRepositoryImpl;
 import com.rentoki.umafx.service.CharacterPropertiesService;
 import com.rentoki.umafx.service.WindowPreferencesService;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
@@ -38,9 +35,7 @@ public class MainApplication extends Application {
     public MainApplication() {
         PropertiesRepository propertiesRepository = new PropertiesRepositoryImpl();
         this.characterPropertiesService = new CharacterPropertiesService(propertiesRepository);
-
-        PreferencesRepository preferencesRepository = new PreferencesRepositoryImpl(MainApplication.class);
-        this.windowPreferencesService = new WindowPreferencesService(preferencesRepository);
+        this.windowPreferencesService = new WindowPreferencesService(MainApplication.class);
     }
 
     @Override
@@ -56,7 +51,10 @@ public class MainApplication extends Application {
     /* ---------------- Helpers ---------------- */
 
     private void initializeTray(Stage stage) {
-        trayIconManager = new TrayIconManager(stage, mediaPlayerManager, () -> jukeboxController.openTrackQueue(), windowPreferencesService::savePos);
+        trayIconManager = new TrayIconManager(stage,
+                mediaPlayerManager,
+                windowPreferencesService,
+                () -> jukeboxController.openTrackQueue());
     }
 
     private Scene loadScene() throws IOException {

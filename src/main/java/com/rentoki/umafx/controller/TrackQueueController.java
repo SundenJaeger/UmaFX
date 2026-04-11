@@ -1,15 +1,10 @@
 package com.rentoki.umafx.controller;
 
-import com.rentoki.umafx.dialog.TrackPropertiesDialog;
-import com.rentoki.umafx.enums.ErrorHeaders;
 import com.rentoki.umafx.enums.MediaResources;
 import com.rentoki.umafx.enums.View;
-import com.rentoki.umafx.exceptions.DesktopActionException;
 import com.rentoki.umafx.model.Track;
 import com.rentoki.umafx.util.ButtonUtils;
-import com.rentoki.umafx.util.ContextMenuBuilder;
-import com.rentoki.umafx.util.DesktopAction;
-import com.rentoki.umafx.util.ShowAlert;
+import com.rentoki.umafx.util.MenuItemFactory;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
@@ -20,9 +15,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -146,33 +138,6 @@ public class TrackQueueController {
         });
     }
 
-    private MenuItem openFileLocation() {
-        MenuItem menuItem = new MenuItem("Open file location");
-
-        menuItem.setOnAction(event -> {
-            try {
-                Track selectedTrack = trackListView.getSelectionModel().getSelectedItem();
-                DesktopAction.openFileLocation(selectedTrack.getPath().toFile());
-            } catch (DesktopActionException e) {
-                ShowAlert.showError(ErrorHeaders.GENERAL_ERROR.getMessage(), e.getMessage());
-            }
-        });
-        menuItem.disableProperty().bind(Bindings.size(trackListView.getSelectionModel().getSelectedItems()).greaterThan(1));
-
-        return menuItem;
-    }
-
-    private MenuItem openTrackProperties() {
-        MenuItem menuItem = new MenuItem("Properties");
-
-        menuItem.setOnAction(event -> {
-            Track selectedTrack = trackListView.getSelectionModel().getSelectedItem();
-            new TrackPropertiesDialog(selectedTrack).show();
-        });
-
-        return menuItem;
-    }
-
     private void setupDisableButtonProperty() {
         removeTrackButton.disableProperty().bind(Bindings.isEmpty(tracks).or(Bindings.isEmpty(selectedTracks)));
         removeAllTracksButton.disableProperty().bind(Bindings.isEmpty(tracks));
@@ -287,13 +252,10 @@ public class TrackQueueController {
     }
 
     private class TrackListCell extends ListCell<Track> {
-        private final ContextMenu contextMenu = new ContextMenuBuilder()
-                .addMenuItem(openFileLocation())
-                .addSeparator()
-                .addMenuItem("Remove", TrackQueueController.this::removeTrack)
-                .addSeparator()
-                .addMenuItem(openTrackProperties())
-                .build();
+        private final ContextMenu contextMenu = MenuItemFactory.createTrackListCellContextMenu(
+                trackListView,
+                TrackQueueController.this::removeTrack
+        );
 
         private final Parent root;
         private final TrackCellController controller;

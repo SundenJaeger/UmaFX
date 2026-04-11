@@ -4,16 +4,15 @@ import com.rentoki.umafx.dialog.TrackQueueDialog;
 import com.rentoki.umafx.enums.ErrorHeaders;
 import com.rentoki.umafx.enums.PlaybackState;
 import com.rentoki.umafx.exceptions.InvalidCharacterFolderException;
-import com.rentoki.umafx.exceptions.PreferencesRepositoryException;
+import com.rentoki.umafx.exceptions.WindowPreferencesException;
 import com.rentoki.umafx.manager.AnimationManager;
 import com.rentoki.umafx.manager.MediaPlayerManager;
 import com.rentoki.umafx.manager.TrayIconManager;
 import com.rentoki.umafx.model.Track;
 import com.rentoki.umafx.service.CharacterPropertiesService;
 import com.rentoki.umafx.service.WindowPreferencesService;
-import com.rentoki.umafx.util.ContextMenuBuilder;
+import com.rentoki.umafx.util.MenuItemFactory;
 import com.rentoki.umafx.util.ShowAlert;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -158,8 +157,6 @@ public class JukeboxController {
 
     @FXML
     private void spriteReleased(MouseEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
         if (event.getButton() == MouseButton.PRIMARY) {
             if (posX != lastPosX || posY != lastPosY) {
                 System.out.println(posX);
@@ -170,16 +167,8 @@ public class JukeboxController {
 
                 try {
                     windowPreferencesService.savePos(lastPosX, lastPosY);
-                } catch (PreferencesRepositoryException e) {
+                } catch (WindowPreferencesException e) {
                     ShowAlert.showError(e.getMessage());
-                    stage.setX(0);
-                    stage.setY(0);
-
-                    try {
-                        windowPreferencesService.savePos(0, 0);
-                    } catch (PreferencesRepositoryException ex) {
-                        ShowAlert.showError(ex.getMessage());
-                    }
                 }
             }
         }
@@ -210,16 +199,11 @@ public class JukeboxController {
     }
 
     private void setupJukeboxContextMenu() {
-        final ContextMenu jukeboxContextMenu = new ContextMenuBuilder()
-                .addMenuItem("Open Track Queue", this::openTrackQueue)
-                .addSeparator()
-                .addMenuItem(trayIconManager.playPauseItem())
-                .addMenuItem(trayIconManager.stopItem())
-                .addMenuItem(trayIconManager.skipItem())
-                .addMenuItem(trayIconManager.volumeItem())
-                .addSeparator()
-                .addMenuItem("Exit", Platform::exit)
-                .build();
+        final ContextMenu jukeboxContextMenu = MenuItemFactory.createJukeboxContextMenu(
+                mediaPlayerManager,
+                this::openTrackQueue,
+                trayIconManager.volumeVisibleProperty()
+        );
 
         jukeboxImageView.setOnContextMenuRequested(event -> jukeboxContextMenu.show(jukeboxImageView, event.getScreenX(), event.getScreenY()));
         volumeContainer.visibleProperty().bind(trayIconManager.volumeVisibleProperty());
