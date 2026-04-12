@@ -6,8 +6,11 @@ import com.rentoki.umafx.model.Track;
 import com.rentoki.umafx.util.ButtonUtils;
 import com.rentoki.umafx.util.MenuItemFactory;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -33,20 +36,36 @@ import java.util.List;
 
 public class TrackQueueController {
     private final ObservableList<Track> tracks = FXCollections.observableArrayList();
+    private final ObservableList<Track> addedTracks = FXCollections.observableArrayList();
+
+    private final BooleanProperty hasRemovals = new SimpleBooleanProperty(false);
+
     private ObservableList<Track> selectedTracks;
+
+    public TrackQueueController(ObservableList<Track> tracks) {
+        this.tracks.setAll(tracks);
+
+        addedTracks.addListener((ListChangeListener<Track>) c -> {
+            while (c.next()) {
+                if (c.wasAdded()) {
+                    this.tracks.addAll(c.getAddedSubList());
+                }
+            }
+        });
+    }
 
     /* ---------------- Public API ---------------- */
 
-    public void setSongs(ObservableList<Track> tracks) {
-        this.tracks.setAll(tracks);
-    }
-
-    public void removeAllTracks() {
-        tracks.clear();
-    }
-
-    public ObservableList<Track> getSongs() {
+    public ObservableList<Track> getTracks() {
         return tracks;
+    }
+
+    public ObservableList<Track> getAddedTracks() {
+        return addedTracks;
+    }
+
+    public BooleanProperty hasRemovalsProperty() {
+        return hasRemovals;
     }
 
     /* ---------------- FXML Fields ---------------- */
@@ -102,7 +121,7 @@ public class TrackQueueController {
 
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(directoryPath, "*{mp3,wav}")) {
                 for (Path path : stream) {
-                    tracks.add(new Track(path));
+                    addedTracks.add(new Track(path));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -119,13 +138,26 @@ public class TrackQueueController {
         List<File> files = fileChooser.showOpenMultipleDialog(stage);
 
         if (files != null) {
-            files.forEach(file -> tracks.add(new Track(file.toPath())));
+            files.forEach(file -> addedTracks.add(new Track(file.toPath())));
         }
     }
 
     @FXML
     private void removeTrack() {
+        if (!selectedTracks.isEmpty()) {
+            hasRemovals.set(true);
+        }
+        addedTracks.removeAll(selectedTracks);
         tracks.removeAll(selectedTracks);
+    }
+
+    @FXML
+    private void removeAllTracks() {
+        if (selectedTracks.isEmpty()) {
+            hasRemovals.set(true);
+        }
+        addedTracks.clear();
+        tracks.clear();
     }
 
     /* ---------------- Helpers ---------------- */

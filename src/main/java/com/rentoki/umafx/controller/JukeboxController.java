@@ -9,6 +9,7 @@ import com.rentoki.umafx.manager.AnimationManager;
 import com.rentoki.umafx.manager.MediaPlayerManager;
 import com.rentoki.umafx.manager.TrayIconManager;
 import com.rentoki.umafx.model.Track;
+import com.rentoki.umafx.model.TrackQueueResult;
 import com.rentoki.umafx.service.CharacterPropertiesService;
 import com.rentoki.umafx.service.WindowPreferencesService;
 import com.rentoki.umafx.util.MenuItemFactory;
@@ -40,8 +41,6 @@ public class JukeboxController {
 
     private final AnimationManager animationManager = new AnimationManager();
     private final StringProperty characterName = new SimpleStringProperty();
-
-    private TrackQueueDialog trackQueueDialog;
 
     private double xOffset;
     private double yOffset;
@@ -183,17 +182,11 @@ public class JukeboxController {
     }
 
     public void openTrackQueue() {
-        if (trackQueueDialog == null) {
-            trackQueueDialog = new TrackQueueDialog();
-        }
+        TrackQueueDialog trackQueueDialog = new TrackQueueDialog(mediaPlayerManager.getSongs());
 
-        trackQueueDialog.removeAllSong();
-        trackQueueDialog.setSongs(mediaPlayerManager.getSongs());
-
-        Optional<ObservableList<Track>> result = trackQueueDialog.showAndWait();
-
-        result.ifPresent(songs -> {
-            List<Path> paths = songs.stream().map(Track::getPath).toList();
+        Optional<TrackQueueResult> result = trackQueueDialog.showAndWait();
+        result.ifPresent(track -> {
+            List<Path> paths = track.currentTracks().stream().map(Track::getPath).toList();
             mediaPlayerManager.addSong(paths);
         });
     }

@@ -5,6 +5,7 @@ import com.rentoki.umafx.enums.MediaResources;
 import com.rentoki.umafx.enums.View;
 import com.rentoki.umafx.exceptions.MediaResourcesException;
 import com.rentoki.umafx.model.Track;
+import com.rentoki.umafx.model.TrackQueueResult;
 import com.rentoki.umafx.util.ButtonUtils;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
@@ -14,9 +15,10 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
-public class TrackQueueDialog extends Dialog<ObservableList<Track>> {
+public class TrackQueueDialog extends Dialog<TrackQueueResult> {
     private static final String DIALOG_TITLE = "Track Queue";
     private static final String SAVE_BUTTON_TEXT = "Save";
     private static final String CANCEL_BUTTON_TEXT = "Cancel";
@@ -27,12 +29,16 @@ public class TrackQueueDialog extends Dialog<ObservableList<Track>> {
     private static final double BUTTON_CORNER_RADIUS = 10.0;
     private static final String STYLESHEET_PATH = "/com/rentoki/umafx/css/track-queue.css";
 
+    private final ObservableList<Track> tracks;
+
     private TrackQueueController trackQueueController;
 
     private Button saveButton;
     private Button cancelButton;
 
-    public TrackQueueDialog() {
+    public TrackQueueDialog(ObservableList<Track> tracks) {
+        this.tracks = tracks;
+
         setTitle(DIALOG_TITLE);
         setHeaderText(null);
 
@@ -45,16 +51,6 @@ public class TrackQueueDialog extends Dialog<ObservableList<Track>> {
         configureButtonBar(dialogPane);
         setResultConverter();
 
-    }
-
-    /* ---------------- Public API ---------------- */
-
-    public void removeAllSong() {
-        trackQueueController.removeAllTracks();
-    }
-
-    public void setSongs(ObservableList<Track> tracks) {
-        trackQueueController.setSongs(tracks);
     }
 
     /* ---------------- Helpers ---------------- */
@@ -73,6 +69,18 @@ public class TrackQueueDialog extends Dialog<ObservableList<Track>> {
     private Parent loadTrackQueueView() {
         try {
             FXMLLoader loader = new FXMLLoader(TrackQueueDialog.class.getResource(View.TRACK_QUEUE.getFxmlPath()));
+            loader.setControllerFactory(param -> {
+                if (param == TrackQueueController.class) {
+                    return new TrackQueueController(tracks);
+                } else {
+                    try {
+                        return param.getConstructor().newInstance();
+                    } catch (InvocationTargetException | InstantiationException | IllegalAccessException |
+                             NoSuchMethodException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
             Parent parent = loader.load();
             trackQueueController = loader.getController();
 
@@ -90,7 +98,10 @@ public class TrackQueueDialog extends Dialog<ObservableList<Track>> {
 
         saveButton = (Button) dialogPane.lookupButton(saveButtonType);
         saveButton.getStyleClass().add(SAVE_BUTTON_STYLE_CLASS);
-        saveButton.disableProperty().bind(Bindings.isEmpty(trackQueueController.getSongs()));
+        saveButton.disableProperty().bind(
+                Bindings.isEmpty(trackQueueController.getAddedTracks())
+                        .and(trackQueueController.hasRemovalsProperty().not())
+        );
 
         cancelButton = (Button) dialogPane.lookupButton(cancelButtonType);
         cancelButton.getStyleClass().add(CANCEL_BUTTON_STYLE_CLASS);
@@ -110,7 +121,10 @@ public class TrackQueueDialog extends Dialog<ObservableList<Track>> {
     private void setResultConverter() {
         setResultConverter(param -> {
             if (param.getButtonData() == ButtonBar.ButtonData.OK_DONE) {
-                return trackQueueController.getSongs();
+                return new TrackQueueResult(
+                        trackQueueController.getAddedTracks(),
+                        trackQueueController.getTracks()
+                );
             }
             return null;
         });
