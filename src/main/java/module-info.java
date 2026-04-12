@@ -14,8 +14,11 @@ module com.rentoki.umafx {
     requires color.thief;
     requires com.github.benmanes.caffeine;
     requires systemtrayfx.core;
+    requires ormlite.jdbc;
+    requires java.sql;
 
     opens com.rentoki.umafx to javafx.fxml;
+    opens com.rentoki.umafx.model to ormlite.jdbc;
     exports com.rentoki.umafx;
     exports com.rentoki.umafx.controller;
     exports com.rentoki.umafx.model;
