@@ -6,8 +6,8 @@ import javafx.scene.image.Image;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
@@ -32,8 +32,7 @@ public class ImageStorage {
                 return null;
             }
 
-            byte[] imageBytes = toBytes(bufferedImage);
-            String hash = hashBytes(imageBytes);
+            String hash = hashBytes(bufferedImage);
             Path imagePath = STORAGE_PATH.resolve(hash + ".jpg");
 
             if (!Files.exists(imagePath)) {
@@ -62,16 +61,19 @@ public class ImageStorage {
         return MediaResources.FALLBACK_ALBUM_ART.getImage();
     }
 
-    private static byte[] toBytes(BufferedImage bufferedImage) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ImageIO.write(bufferedImage, "jpg", out);
-
-        return out.toByteArray();
-    }
-
-    private static String hashBytes(byte[] bytes) throws NoSuchAlgorithmException {
+    private static String hashBytes(BufferedImage bufferedImage) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] hash = digest.digest(bytes);
+
+        int width = bufferedImage.getWidth();
+        int height = bufferedImage.getHeight();
+        int[] pixels = bufferedImage.getRGB(0, 0, width, height, null, 0, width);
+
+        ByteBuffer buffer = ByteBuffer.allocate(pixels.length * 4);
+        for (int pixel : pixels) {
+            buffer.putInt(pixel);
+        }
+
+        byte[] hash = digest.digest(buffer.array());
 
         return HexFormat.of().formatHex(hash);
     }
