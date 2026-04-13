@@ -38,6 +38,12 @@ public class TrackHistoryController {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+
+            itemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    controller.setTrackHistory(newValue);
+                }
+            });
         }
 
         @Override
@@ -49,7 +55,6 @@ public class TrackHistoryController {
                 setGraphic(null);
             } else {
                 setGraphic(root);
-                controller.setTrackHistory(item);
             }
         }
     }
