@@ -5,10 +5,12 @@ import com.rentoki.umafx.enums.MediaResources;
 import com.rentoki.umafx.enums.View;
 import com.rentoki.umafx.exceptions.MediaResourcesException;
 import com.rentoki.umafx.interfaces.PropertiesRepository;
+import com.rentoki.umafx.manager.DatabaseManager;
 import com.rentoki.umafx.manager.MediaPlayerManager;
 import com.rentoki.umafx.manager.TrayIconManager;
 import com.rentoki.umafx.repository.PropertiesRepositoryImpl;
 import com.rentoki.umafx.service.CharacterPropertiesService;
+import com.rentoki.umafx.service.TrackHistoryService;
 import com.rentoki.umafx.service.WindowPreferencesService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -29,6 +31,7 @@ public class MainApplication extends Application {
 
     private final CharacterPropertiesService characterPropertiesService;
     private final WindowPreferencesService windowPreferencesService;
+    private final TrackHistoryService trackHistoryService;
 
     private JukeboxController jukeboxController;
 
@@ -36,6 +39,8 @@ public class MainApplication extends Application {
         PropertiesRepository propertiesRepository = new PropertiesRepositoryImpl();
         this.characterPropertiesService = new CharacterPropertiesService(propertiesRepository);
         this.windowPreferencesService = new WindowPreferencesService(MainApplication.class);
+
+        trackHistoryService = new TrackHistoryService();
     }
 
     @Override
@@ -74,7 +79,11 @@ public class MainApplication extends Application {
 
     private Object createController(Class<?> clazz) {
         if (clazz == JukeboxController.class) {
-            return new JukeboxController(windowPreferencesService, characterPropertiesService, mediaPlayerManager, trayIconManager);
+            return new JukeboxController(windowPreferencesService,
+                    characterPropertiesService,
+                    mediaPlayerManager,
+                    trayIconManager,
+                    trackHistoryService);
         }
 
         try {
@@ -116,5 +125,10 @@ public class MainApplication extends Application {
     private void loadFont() {
         Font font = Font.loadFont(MainApplication.class.getResourceAsStream("fonts/AtlanSemiBold.otf"), 0);
         System.out.println(font.getFamily());
+    }
+
+    @Override
+    public void stop() throws Exception {
+        DatabaseManager.close();
     }
 }

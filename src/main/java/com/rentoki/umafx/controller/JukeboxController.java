@@ -1,5 +1,6 @@
 package com.rentoki.umafx.controller;
 
+import com.rentoki.umafx.dialog.TrackHistoryDialog;
 import com.rentoki.umafx.dialog.TrackQueueDialog;
 import com.rentoki.umafx.enums.ErrorHeaders;
 import com.rentoki.umafx.enums.PlaybackState;
@@ -11,13 +12,13 @@ import com.rentoki.umafx.manager.TrayIconManager;
 import com.rentoki.umafx.model.Track;
 import com.rentoki.umafx.model.TrackQueueResult;
 import com.rentoki.umafx.service.CharacterPropertiesService;
+import com.rentoki.umafx.service.TrackHistoryService;
 import com.rentoki.umafx.service.WindowPreferencesService;
 import com.rentoki.umafx.util.MenuItemFactory;
 import com.rentoki.umafx.util.ShowAlert;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -38,6 +39,7 @@ public class JukeboxController {
     private final CharacterPropertiesService characterPropertiesService;
     private final MediaPlayerManager mediaPlayerManager;
     private final TrayIconManager trayIconManager;
+    private final TrackHistoryService trackHistoryService;
 
     private final AnimationManager animationManager = new AnimationManager();
     private final StringProperty characterName = new SimpleStringProperty();
@@ -60,11 +62,16 @@ public class JukeboxController {
     @FXML
     private Label volumeLabel;
 
-    public JukeboxController(WindowPreferencesService windowPreferencesService, CharacterPropertiesService characterPropertiesService, MediaPlayerManager mediaPlayerManager, TrayIconManager trayIconManager) {
+    public JukeboxController(WindowPreferencesService windowPreferencesService,
+                             CharacterPropertiesService characterPropertiesService,
+                             MediaPlayerManager mediaPlayerManager,
+                             TrayIconManager trayIconManager,
+                             TrackHistoryService trackHistoryService) {
         this.windowPreferencesService = windowPreferencesService;
         this.characterPropertiesService = characterPropertiesService;
         this.mediaPlayerManager = mediaPlayerManager;
         this.trayIconManager = trayIconManager;
+        this.trackHistoryService = trackHistoryService;
     }
 
     @FXML
@@ -186,9 +193,15 @@ public class JukeboxController {
 
         Optional<TrackQueueResult> result = trackQueueDialog.showAndWait();
         result.ifPresent(track -> {
+            track.addedTracks().forEach(trackHistoryService::addTrackHistory);
             List<Path> paths = track.currentTracks().stream().map(Track::getPath).toList();
             mediaPlayerManager.addSong(paths);
         });
+    }
+
+    private void openTrackHistory() {
+        TrackHistoryDialog trackHistoryDialog = new TrackHistoryDialog(trackHistoryService.getAllTrackHistories());
+        trackHistoryDialog.show();
     }
 
     private void setupJukeboxContextMenu() {
